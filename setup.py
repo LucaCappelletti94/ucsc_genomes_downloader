@@ -30,7 +30,7 @@ def find_version(*file_paths):
 
 __version__ = find_version("ucsc_genomes_downloader", "__version__.py")
 
-test_deps = ['pytest', 'pytest-cov', 'coveralls']
+test_deps = ['pytest', 'pytest-cov', 'coveralls', "validate_version_code"]
 
 extras = {
     'test': test_deps,
