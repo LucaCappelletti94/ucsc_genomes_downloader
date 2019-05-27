@@ -19,6 +19,8 @@ def download_genome(genome:str, path:str=".", chromosomes:List[str]=None, cache_
         chromosomes = all_chromosomes
     with Pool(min(cpu_count(), len(chromosomes))) as p:
         list(tqdm(p.imap(download, download_tasks(genome, chromosomes, cache_dir, clear_cache)), total=len(chromosomes), desc="Downloading genome"))
+        p.close()
+        p.join()
     merge_genome(path, genome, cache_dir)
     if clear_cache:
         shutil.rmtree(cache_dir)
