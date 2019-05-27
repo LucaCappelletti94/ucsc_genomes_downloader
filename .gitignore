@@ -6,3 +6,4 @@
 *.fa
 .coverage
 .coverage.*
+coverage\.xml
