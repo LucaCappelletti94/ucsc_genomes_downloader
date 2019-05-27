@@ -28,9 +28,10 @@ There are a couple options, here's a more complete example:
     from ucsc_genomes_downloader image download_genome
     download_genome(
         genome="hg19",
-        path:str=".", # The path where to save the genome, by default the current directory.
-        cache_dir:str=".genome", # The path where to store the download cache.
-        clear_cache:bool=True # Whetever to delete the download cache, by default True.
+        path=".", # The path where to save the genome, by default the current directory.
+        chromosomes=["chr19"], # List of chromosomes to download. By default, all.
+        cache_dir=".genome", # The path where to store the download cache.
+        clear_cache=True # Whetever to delete the download cache, by default True.
     )
 
 .. _hg19: https://www.ncbi.nlm.nih.gov/assembly/GCF_000001405.13/
