@@ -26,7 +26,7 @@ after_script:
 script:
 - rm -rf .coverage
 - coverage erase
-- pytest --cov=ucsc_genomes_downloader --cov-report xml:coverage.xml  --concurrency=multiprocessing
+- pytest --cov=ucsc_genomes_downloader --cov-report xml:coverage.xml 
 - coverage combine --append
 - coverage report
 - coverage xml
