@@ -27,7 +27,7 @@ script:
 - rm -rf .coverage
 - coverage erase
 - pytest --cov=ucsc_genomes_downloader --cov-report xml:coverage.xml 
-- coverage combine
+- coverage combine --append || true
 - coverage report
 - coverage xml
 - sonar-scanner
