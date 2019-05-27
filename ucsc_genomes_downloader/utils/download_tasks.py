@@ -1,5 +1,4 @@
 from typing import List, Tuple
-from .chromosomes import chromosomes
 
 def format_url(genome:str, chromosome:str)->str:
     """Return formatted download url.
@@ -11,9 +10,10 @@ def format_url(genome:str, chromosome:str)->str:
         chromosome=chromosome
     )
 
-def download_tasks(genome:str, cache_dir:str, clear_cache:bool)->List[Tuple]:
+def download_tasks(genome:str, chromosomes:List[str], cache_dir:str, clear_cache:bool)->List[Tuple]:
     """Formats the download tasks
         genome:str, genome to download.
+        chromosomes:List[str], chromosomes to download.
         cache_dir:str, directory where to store the download cache.
         clear_cache:bool, wheter to delete or not the download cache.
     """

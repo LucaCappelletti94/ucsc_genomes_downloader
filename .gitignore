@@ -4,3 +4,5 @@
 */__pycache__/*
 .genome/*
 *.fa
+.coverage
+.coverage.*
