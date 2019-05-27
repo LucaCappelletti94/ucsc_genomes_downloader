@@ -15,8 +15,7 @@ def download_genome(genome:str, path:str=".", chromosomes:List[str]=None, cache_
     """
     if os.path.exists("{path}/{genome}.fa".format(path=path, genome=genome)):
         return
-    if chromosomes is None:
-        chromosomes = all_chromosomes
+    chromosomes = all_chromosomes if chromosomes is None else chromosomes
     with Pool(min(cpu_count(), len(chromosomes))) as p:
         list(tqdm(p.imap(download, download_tasks(genome, chromosomes, cache_dir, clear_cache)), total=len(chromosomes), desc="Downloading genome"))
         p.close()
