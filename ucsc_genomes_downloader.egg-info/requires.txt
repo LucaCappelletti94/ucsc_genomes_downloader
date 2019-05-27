@@ -1,0 +1,8 @@
+auto_tqdm
+requests
+
+[test]
+pytest
+pytest-cov
+coveralls
+validate_version_code

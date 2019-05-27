@@ -1,0 +1,16 @@
+README.rst
+setup.py
+ucsc_genomes_downloader/__init__.py
+ucsc_genomes_downloader/__version__.py
+ucsc_genomes_downloader/download_genome.py
+ucsc_genomes_downloader.egg-info/PKG-INFO
+ucsc_genomes_downloader.egg-info/SOURCES.txt
+ucsc_genomes_downloader.egg-info/dependency_links.txt
+ucsc_genomes_downloader.egg-info/requires.txt
+ucsc_genomes_downloader.egg-info/top_level.txt
+ucsc_genomes_downloader/utils/__init__.py
+ucsc_genomes_downloader/utils/all_chromosomes.py
+ucsc_genomes_downloader/utils/download.py
+ucsc_genomes_downloader/utils/download_tasks.py
+ucsc_genomes_downloader/utils/merge_genome.py
+ucsc_genomes_downloader/utils/ungzip.py
