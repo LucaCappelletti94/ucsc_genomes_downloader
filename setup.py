@@ -28,7 +28,7 @@ def find_version(*file_paths):
     raise RuntimeError("Unable to find version string.")
 
 
-__version__ = find_version("arrp", "__version__.py")
+__version__ = find_version("ucsc_genomes_downloader", "__version__.py")
 
 test_deps = ['pytest', 'pytest-cov', 'coveralls']
 
@@ -37,18 +37,18 @@ extras = {
 }
 
 setup(
-    name='arrp',
+    name='ucsc_genomes_downloader',
 
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
     version=__version__,
 
-    description='Simple python package to render the holdouts and training datasets of active regulatory regions for models with the task to predict them.',
+    description='Python package to quickly download genomes from the UCSC.',
     long_description=long_description,
 
     # The project's main homepage.
-    url='https://github.com/LucaCappelletti94/arrp',
+    url='https://github.com/LucaCappelletti94/ucsc_genomes_downloader',
 
     # Author details
     author='Luca Cappelletti',
@@ -65,7 +65,7 @@ setup(
         #   3 - Alpha
         #   4 - Beta
         #   5 - Production/Stable
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
 
         # Pick your license as you wish (should match "license" above)
         'License :: OSI Approved :: MIT License',
@@ -83,6 +83,6 @@ setup(
     # requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
     tests_require=test_deps,
-    install_requires=["auto_tqdm", "typing", "pandas", "sklearn", "fasta_one_hot_encoder", "requests", "holdouts_generator"],
+    install_requires=["auto_tqdm", "requests"],
     extras_require=extras,
 )

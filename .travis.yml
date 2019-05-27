@@ -9,7 +9,7 @@ addons:
   sonarcloud:
     organization: "lucacappelletti94-github"
     token:
-      secure: "eCZKLfOLdeIvdkw1LdQi27AarhUXJ6Gr2TeXepfIewnFODkA5U15gQcN/+nA0xyvAaReu6u26lHpJOmWVrcQQHWnPcaBDsZK+VEu7oBuo54tjf4m7zXPyr/PFRYCERVshB3r5feXEvObddPaf2/IhD7GG0GGnw3+mvWkBMo8iHEdTcvxzT2udu9kXDeaNZVvizmz6/aE2v9ro72IEWAYpDBAq7Z+gqB6K27Dkkdy2rtrjHiz26q+zPm9Uqm6QcFymNqsR3OZENVXrKNaweA38Yc9kgu/ws1OcRmF7qkdRKBlLzCoxwSPREMzNSe3UxYZo18o6Xbjb8tyNam3xOe01bKZfBGsKV7X3jXu9laeXzSqySRbssEIEaKrxwK5z6ZKfsXrRTOaFt9iLokIo19LneqXQVTBXevoVQ5/w4Q4RS6yVZbCZ2f7sOwgA4DwqQpUCu/ayXNSR5zHCx0oBafx9tEFS41h/sYlOC0SpTe8WpGVfDoAyIisSMamUjFRbBGwUJQidgYjma+Lj4NInvy7ilNMFX64lZ029giETE/YUF7DveJvPsqHFWkEmLqemeJcNVdxU5qQMuG8pqHoFUET/j8VV/llUeHSKjiL08zyfGt9sFoeZdi/fVRYn6xbegVaXUGcv6XGgV8V7YsI1snIagKeEpKQBr38ycGwv+7qVHA="
+      secure: "DeWcLd39DyZs3QmRwKnbcZE1n8CkyTdGDOdEmwu0ywAxGJpGju+H+cXTIDiDUfYe0+lpezSpoVoCz3l9gjlPHdCLnn9Pj2l6sgM0oN+wDkFa9gJRpXU+IZxDOcczWpvTRSYLCSoAsCCBN82SjeEhU/pIAoM4hJwLg+FjUj2J9KP8sUpNsUpG97MefYQHlrqIRAMlZ7CwDUOmZv2iqTWs2hslDAArPX1XMaKEdPv4Zp17esfmkjOrgLkj96b45cuyJIXN2gr8KuFGLkqV7ZVofrIbEqL1l6cj1tOUCxfiStcq8qu2PE9gJbqZm51mJYA+FXTe6EZlgmGJdTZgH+cJyaABd381dFHMdRD55SUEpq7UeqqzpPleqrqb56kJ2So9pnko5plODhutjhaTB8Ov7vz6DVTFJ4fL9FzjYMX2MHbMrk+/Zh9S+7Cb/feiVPXWOh8fu3YqVlJzfttpshshj8xp9B6TZOpPkQoAaNewCRTm6uqQQuFjtAheymb01e9aMAfXVHIVm39RgZEnaUQBrSALhAqfDdKeOrxeHMX3E1WuC7OMvlMvBNyw4gc1hA86p5LS1Z5V8xuwyNnvVGft3iqUmk/mIwLxaUiM+lMv3VnYbukrFmkaM0Te/nr36Y8dKWV6J33TmkTBlRSYrc1+4ct3tcIvEzOf/vug3wZba74="
 language: python
 python:
 - '3.6'
@@ -26,7 +26,7 @@ after_script:
 script:
 - rm -rf .coverage
 - coverage erase
-- pytest --cov=arrp --cov-report xml:coverage.xml 
+- pytest --cov=ucsc_genomes_downloader --cov-report xml:coverage.xml 
 - coverage combine --append
 - coverage report
 - coverage xml

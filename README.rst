@@ -35,21 +35,21 @@ There a a couple options, here's a more complete example:
 
 .. _hg19: https://www.ncbi.nlm.nih.gov/assembly/GCF_000001405.13/
 
-.. |travis| image:: https://travis-ci.org/LucaCappelletti94/arrp.png
-   :target: https://travis-ci.org/LucaCappelletti94/arrp
+.. |travis| image:: https://travis-ci.org/LucaCappelletti94/ucsc_genomes_downloader.png
+   :target: https://travis-ci.org/LucaCappelletti94/ucsc_genomes_downloader
 
-.. |sonar_quality| image:: https://sonarcloud.io/api/project_badges/measure?project=LucaCappelletti94_arrp&metric=alert_status
-    :target: https://sonarcloud.io/dashboard/index/LucaCappelletti94_arrp
+.. |sonar_quality| image:: https://sonarcloud.io/api/project_badges/measure?project=LucaCappelletti94_ucsc_genomes_downloader&metric=alert_status
+    :target: https://sonarcloud.io/dashboard/index/LucaCappelletti94_ucsc_genomes_downloader
 
-.. |sonar_maintainability| image:: https://sonarcloud.io/api/project_badges/measure?project=LucaCappelletti94_arrp&metric=sqale_rating
-    :target: https://sonarcloud.io/dashboard/index/LucaCappelletti94_arrp
+.. |sonar_maintainability| image:: https://sonarcloud.io/api/project_badges/measure?project=LucaCappelletti94_ucsc_genomes_downloader&metric=sqale_rating
+    :target: https://sonarcloud.io/dashboard/index/LucaCappelletti94_ucsc_genomes_downloader
 
-.. |sonar_coverage| image:: https://sonarcloud.io/api/project_badges/measure?project=LucaCappelletti94_arrp&metric=coverage
-    :target: https://sonarcloud.io/dashboard/index/LucaCappelletti94_arrp
+.. |sonar_coverage| image:: https://sonarcloud.io/api/project_badges/measure?project=LucaCappelletti94_ucsc_genomes_downloader&metric=coverage
+    :target: https://sonarcloud.io/dashboard/index/LucaCappelletti94_ucsc_genomes_downloader
 
 .. |code_climate_maintainability| image:: https://api.codeclimate.com/v1/badges/25fb7c6119e188dbd12c/maintainability
-   :target: https://codeclimate.com/github/LucaCappelletti94/arrp/maintainability
+   :target: https://codeclimate.com/github/LucaCappelletti94/ucsc_genomes_downloader/maintainability
    :alt: Maintainability
 
-.. |pip| image:: https://badge.fury.io/py/arrp.svg
-    :target: https://badge.fury.io/py/arrp
+.. |pip| image:: https://badge.fury.io/py/ucsc_genomes_downloader.svg
+    :target: https://badge.fury.io/py/ucsc_genomes_downloader
