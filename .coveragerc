@@ -1,0 +1,4 @@
+[run]
+parallel=true
+concurrency=multiprocessing
+omit=*/python3.6/site-packages/*
