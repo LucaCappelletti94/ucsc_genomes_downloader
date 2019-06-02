@@ -1,8 +1,9 @@
-auto_tqdm
 requests
+auto_tqdm
 
 [test]
-pytest
-pytest-cov
 coveralls
+pytest
+codacy-coverage
 validate_version_code
+pytest-cov
