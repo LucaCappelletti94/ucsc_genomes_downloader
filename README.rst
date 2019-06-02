@@ -18,7 +18,29 @@ Since some software handling coverages sometime get slightly different results, 
 
 |coveralls| |sonar_coverage| |code_climate_coverage|
 
-AFTER
+Usage example
+---------------------------------------
+Suppose you want to download the genome _hg19:
+
+.. code:: python
+
+    from ucsc_genomes_downloader image download_genome
+    download_genome("hg19")
+
+There are a couple options, here's a more complete example:
+
+.. code:: python
+
+    from ucsc_genomes_downloader image download_genome
+    download_genome(
+        genome="hg19",
+        path=".", # The path where to save the genome, by default the current directory.
+        chromosomes=["chr19"], # List of chromosomes to download. By default, all.
+        cache_dir=".genome", # The path where to store the download cache.
+        clear_cache=True # Whetever to delete the download cache, by default True.
+    )
+
+.. _hg19: https://www.ncbi.nlm.nih.gov/assembly/GCF_000001405.13/
 
 .. |travis| image:: https://travis-ci.org/LucaCappelletti94/ucsc_genomes_downloader.png
    :target: https://travis-ci.org/LucaCappelletti94/ucsc_genomes_downloader
