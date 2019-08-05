@@ -66,8 +66,8 @@ There are a couple options, here's a more complete example:
     :target: https://badge.fury.io/py/ucsc_genomes_downloader
     :alt: Pypi project
 
-.. |downloads| image:: https://pepy.tech/badge/ucsc_genomes_downloader
-    :target: https://pepy.tech/badge/ucsc_genomes_downloader
+.. |downloads| image:: https://pepy.tech/badge/ucsc-genomes-downloader
+    :target: https://pepy.tech/badge/ucsc-genomes-downloader
     :alt: Pypi total project downloads 
 
 .. |codacy|  image:: https://api.codacy.com/project/badge/Grade/79564bf70059458b8a9ee6e775f4c7d2
