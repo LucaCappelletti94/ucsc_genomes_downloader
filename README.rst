@@ -62,8 +62,8 @@ There are a couple options, here's a more complete example:
     :target: https://coveralls.io/github/LucaCappelletti94/ucsc_genomes_downloader?branch=master
     :alt: Coveralls Coverage
 
-.. |pip| image:: https://badge.fury.io/py/ucsc_genomes_downloader.svg
-    :target: https://badge.fury.io/py/ucsc_genomes_downloader
+.. |pip| image:: https://badge.fury.io/py/ucsc-genomes-downloader.svg
+    :target: https://badge.fury.io/py/ucsc-genomes-downloader
     :alt: Pypi project
 
 .. |downloads| image:: https://pepy.tech/badge/ucsc-genomes-downloader
