@@ -24,7 +24,7 @@ Suppose you want to download the genome _hg19:
 
 .. code:: python
 
-    from ucsc_genomes_downloader image download_genome
+    from ucsc_genomes_downloader import download_genome
     download_genome("hg19")
 
 There are a couple options, here's a more complete example:
