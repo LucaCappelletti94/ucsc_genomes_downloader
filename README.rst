@@ -31,7 +31,7 @@ There are a couple options, here's a more complete example:
 
 .. code:: python
 
-    from ucsc_genomes_downloader image download_genome
+    from ucsc_genomes_downloader import download_genome
     download_genome(
         genome="hg19",
         path=".", # The path where to save the genome, by default the current directory.
