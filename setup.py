@@ -30,7 +30,8 @@ def find_version(*file_paths):
 
 __version__ = find_version("ucsc_genomes_downloader", "__version__.py")
 
-test_deps =["coveralls", "pytest", "codacy-coverage", "validate_version_code", "pytest-cov"]
+test_deps = ["coveralls", "pytest", "codacy-coverage",
+             "validate_version_code", "pytest-cov"]
 
 extras = {
     'test': test_deps,
@@ -55,6 +56,6 @@ setup(
     packages=find_packages(exclude=['contrib', 'docs', 'tests*']),
     tests_require=test_deps,
     # Add here the package dependencies
-    install_requires=["requests", "auto_tqdm"],
+    install_requires=["requests", "tqdm", "roman"],
     extras_require=extras,
 )

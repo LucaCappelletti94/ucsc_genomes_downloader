@@ -18,6 +18,10 @@ Since some software handling coverages sometime get slightly different results, 
 
 |coveralls| |sonar_coverage| |code_climate_coverage|
 
+Supported genomes
+-----------------
+
+
 Usage example
 ---------------------------------------
 Suppose you want to download the genome _hg19:

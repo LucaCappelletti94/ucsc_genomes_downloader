@@ -1,0 +1,265 @@
+{
+    "hg38": {
+        "numbers": 22,
+        "letters": [
+            "X",
+            "Y",
+            "M"
+        ],
+        "roman_numerals": false
+    },
+    "hg19": {
+        "numbers": 22,
+        "letters": [
+            "X",
+            "Y",
+            "M"
+        ],
+        "roman_numerals": false
+    },
+    "hg18": {
+        "numbers": 22,
+        "letters": [
+            "X",
+            "Y",
+            "M"
+        ],
+        "roman_numerals": false
+    },
+    "hg17": {
+        "numbers": 22,
+        "letters": [
+            "X",
+            "Y",
+            "M"
+        ],
+        "roman_numerals": false
+    },
+    "hg16": {
+        "numbers": 22,
+        "letters": [
+            "X",
+            "Y",
+            "M"
+        ],
+        "roman_numerals": false
+    },
+    "hg15": {
+        "numbers": 22,
+        "letters": [
+            "X",
+            "Y",
+            "M"
+        ],
+        "roman_numerals": false
+    },
+    "hg13": {
+        "numbers": 22,
+        "letters": [
+            "X",
+            "Y",
+            "M"
+        ],
+        "roman_numerals": false
+    },
+    "hg12": {
+        "numbers": 22,
+        "letters": [
+            "X",
+            "Y",
+            "M"
+        ],
+        "roman_numerals": false
+    },
+    "hg11": {
+        "numbers": 22,
+        "letters": [
+            "X",
+            "Y",
+            "M"
+        ],
+        "roman_numerals": false
+    },
+    "hg10": {
+        "numbers": 22,
+        "letters": [
+            "X",
+            "Y"
+        ],
+        "roman_numerals": false
+    },
+    "hg8": {
+        "numbers": 22,
+        "letters": [
+            "X",
+            "Y"
+        ],
+        "roman_numerals": false
+    },
+    "hg7": {
+        "numbers": 22,
+        "letters": [
+            "X",
+            "Y"
+        ],
+        "roman_numerals": false
+    },
+    "hg6": {
+        "numbers": 22,
+        "letters": [
+            "X",
+            "Y"
+        ],
+        "roman_numerals": false
+    },
+    "hg5": {
+        "numbers": 22,
+        "letters": [
+            "X",
+            "Y"
+        ],
+        "roman_numerals": false
+    },
+    "hg4": {
+        "numbers": 22,
+        "letters": [
+            "X",
+            "Y"
+        ],
+        "roman_numerals": false
+    },
+    "mm10": {
+        "numbers": 19,
+        "letters": [
+            "X",
+            "Y",
+            "M"
+        ],
+        "roman_numerals": false
+    },
+    "mm9": {
+        "numbers": 19,
+        "letters": [
+            "X",
+            "Y",
+            "M"
+        ],
+        "roman_numerals": false
+    },
+    "mm8": {
+        "numbers": 19,
+        "letters": [
+            "X",
+            "Y",
+            "M"
+        ],
+        "roman_numerals": false
+    },
+    "mm7": {
+        "numbers": 19,
+        "letters": [
+            "X",
+            "Y",
+            "M"
+        ],
+        "roman_numerals": false
+    },
+    "mm6": {
+        "numbers": 19,
+        "letters": [
+            "X",
+            "Y",
+            "M"
+        ],
+        "roman_numerals": false
+    },
+    "mm5": {
+        "numbers": 19,
+        "letters": [
+            "X",
+            "Y",
+            "M"
+        ],
+        "roman_numerals": false
+    },
+    "mm4": {
+        "numbers": 19,
+        "letters": [
+            "X",
+            "Y",
+            "M"
+        ],
+        "roman_numerals": false
+    },
+    "mm3": {
+        "numbers": 19,
+        "letters": [
+            "X"
+        ],
+        "roman_numerals": false
+    },
+    "mm2": {
+        "numbers": 19,
+        "letters": [
+            "X"
+        ],
+        "roman_numerals": false
+    },
+    "mm1": {
+        "numbers": 19,
+        "letters": [
+            "X"
+        ],
+        "roman_numerals": false
+    },
+    "sacCer3": {
+        "numbers": 16,
+        "letters": [],
+        "roman_numerals": true
+    },
+    "sacCer2": {
+        "numbers": 16,
+        "letters": [],
+        "roman_numerals": true
+    },
+    "ce11": {
+        "numbers": 5,
+        "letters": [
+            "M",
+            "X"
+        ],
+        "roman_numerals": true
+    },
+    "ce10": {
+        "numbers": 5,
+        "letters": [
+            "M",
+            "X"
+        ],
+        "roman_numerals": true
+    },
+    "ce6": {
+        "numbers": 5,
+        "letters": [
+            "M",
+            "X"
+        ],
+        "roman_numerals": true
+    },
+    "ce4": {
+        "numbers": 5,
+        "letters": [
+            "M",
+            "X"
+        ],
+        "roman_numerals": true
+    },
+    "ce2": {
+        "numbers": 5,
+        "letters": [
+            "M",
+            "X"
+        ],
+        "roman_numerals": true
+    }
+}

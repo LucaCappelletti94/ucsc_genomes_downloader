@@ -1,7 +1,7 @@
 import requests
 import os
 from typing import Tuple
-from .ungzip import ungzip
+from .ungzip import ungzip, unzip
 
 
 def _downloader(
@@ -17,14 +17,22 @@ def _downloader(
         clear_compressed_cache:bool, whetever to clear or not the download cache.
     """
     os.makedirs(cache_dir, exist_ok=True)
-    file_path = "{cache_dir}/{chromosome}.fa.gz".format(
+    file_path = "{cache_dir}/{chromosome}.fa.tmp".format(
         cache_dir=cache_dir,
         chromosome=chromosome
     )
+    target_path = file_path[:-4]
     if not os.path.exists(file_path):
         with open(file_path, 'wb') as f:
             f.write(requests.get(url).content)
-    ungzip(file_path)
+    if url.endswith(".gz"):
+        ungzip(file_path)
+    elif url.endswith(".zip"):
+        unzip(file_path)
+    else:
+        ValueError("Unknown compression extension for file at url {url}".format(
+            file_path=file_path
+        ))
     if clear_compressed_cache:
         os.remove(file_path)
 
