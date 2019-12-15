@@ -3,7 +3,7 @@ from tqdm.auto import tqdm
 import shutil
 import os
 from typing import List
-from .utils import download_tasks, download, merge_genome, all_chromosomes
+from .utils import download_tasks, download, merge_genome
 
 
 def download_genome(
@@ -24,7 +24,15 @@ def download_genome(
     """
     if os.path.exists("{path}/{genome}.fa".format(path=path, genome=genome)):
         return
-    chromosomes = all_chromosomes if chromosomes is None else chromosomes
+
+    if chromosomes is None:
+        if genome.startswith("hg"):
+            chromosomes_number = 22
+        if genome.startswith("mm"):
+            chromosomes_number = 19
+        chromosomes = [
+            "chr{n}".format(n=n) for n in tuple(range(1, chromosomes_number+1)) + ("X", "Y", "M")
+        ]
     with Pool(min(cpu_count(), len(chromosomes))) as p:
         list(tqdm(
             p.imap(

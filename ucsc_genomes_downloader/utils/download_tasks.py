@@ -1,4 +1,5 @@
 from typing import List, Tuple
+import requests
 
 
 def format_url(genome: str, chromosome: str) -> str:
@@ -6,9 +7,21 @@ def format_url(genome: str, chromosome: str) -> str:
         genome:str, the genome to download.
         chromosome:str, the chromosome to download.
     """
-    return "http://hgdownload.cse.ucsc.edu/goldenPath/{genome}/chromosomes/{chromosome}.fa.gz".format(
-        genome=genome,
-        chromosome=chromosome
+    candidate_extensions = ("gz", "zip")
+    for candidate_extension in candidate_extensions:
+        candidate_url = "http://hgdownload.cse.ucsc.edu/goldenPath/{genome}/chromosomes/{chromosome}.fa.{candidate_extension}".format(
+            genome=genome,
+            chromosome=chromosome,
+            candidate_extension=candidate_extension
+        )
+        if requests.head(candidate_url).status_code == 200:
+            return candidate_url
+    raise ValueError(
+        "No file has been found searching for extensions {candidate_extensions} for genome {genome} and chromosome {chromosome}".format(
+            candidate_extensions=", ".join(candidate_extensions),
+            genome=genome,
+            chromosome=chromosome
+        )
     )
 
 
