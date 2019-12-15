@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: ucsc-genomes-downloader
-Version: 1.0.1
+Version: 1.0.2
 Summary: Python package to quickly download genomes from the UCSC.
 Home-page: https://github.com/LucaCappelletti94/ucsc_genomes_downloader
 Author: Luca Cappelletti
@@ -32,14 +32,14 @@ Description: ucsc_genomes_downloader
         
         .. code:: python
         
-            from ucsc_genomes_downloader image download_genome
+            from ucsc_genomes_downloader import download_genome
             download_genome("hg19")
         
         There are a couple options, here's a more complete example:
         
         .. code:: python
         
-            from ucsc_genomes_downloader image download_genome
+            from ucsc_genomes_downloader import download_genome
             download_genome(
                 genome="hg19",
                 path=".", # The path where to save the genome, by default the current directory.
@@ -70,12 +70,12 @@ Description: ucsc_genomes_downloader
             :target: https://coveralls.io/github/LucaCappelletti94/ucsc_genomes_downloader?branch=master
             :alt: Coveralls Coverage
         
-        .. |pip| image:: https://badge.fury.io/py/ucsc_genomes_downloader.svg
-            :target: https://badge.fury.io/py/ucsc_genomes_downloader
+        .. |pip| image:: https://badge.fury.io/py/ucsc-genomes-downloader.svg
+            :target: https://badge.fury.io/py/ucsc-genomes-downloader
             :alt: Pypi project
         
-        .. |downloads| image:: https://pepy.tech/badge/ucsc_genomes_downloader
-            :target: https://pepy.tech/badge/ucsc_genomes_downloader
+        .. |downloads| image:: https://pepy.tech/badge/ucsc-genomes-downloader
+            :target: https://pepy.tech/badge/ucsc-genomes-downloader
             :alt: Pypi total project downloads 
         
         .. |codacy|  image:: https://api.codacy.com/project/badge/Grade/79564bf70059458b8a9ee6e775f4c7d2
@@ -89,6 +89,7 @@ Description: ucsc_genomes_downloader
         .. |code_climate_coverage| image:: https://api.codeclimate.com/v1/badges/9cd5ed4d4e41892ccc9d/test_coverage
             :target: https://codeclimate.com/github/LucaCappelletti94/ucsc_genomes_downloader/test_coverage
             :alt: Code Climate Coverate
+        
 Platform: UNKNOWN
 Classifier: Development Status :: 3 - Alpha
 Classifier: License :: OSI Approved :: MIT License
