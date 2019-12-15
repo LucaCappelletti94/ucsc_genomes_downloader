@@ -22,7 +22,7 @@ def test_multiple_downloads():
     for genome in tqdm(load_all_genomes(), "Genomes"):
         download_genome(
             genome,
-            chromosomes=random.choice(load_chromosomes(genome)),
+            chromosomes=[random.choice(load_chromosomes(genome))],
             clear_cache=True
         )
         os.remove(f"{genome}.fa")
