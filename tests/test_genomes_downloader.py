@@ -38,6 +38,7 @@ def test_multiple_downloads():
         "mm1"
     ]
     for genome in genomes:
+        print(f"Downloading {genome}")
         download_genome(genome, clear_cache=True, chromosomes=["chrM"])
         os.remove(f"{genome}.fa")
 
