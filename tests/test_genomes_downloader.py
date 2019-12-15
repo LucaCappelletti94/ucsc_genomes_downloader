@@ -1,9 +1,10 @@
 from ucsc_genomes_downloader import download_genome
-from ucsc_genomes_downloader.download_genome import load_all_genomes
+from ucsc_genomes_downloader.download_genome import load_chromosomes, load_all_genomes
 import os
 import json
 import pytest
 from tqdm.auto import tqdm
+import random
 
 
 def test_genomes_downloader():
@@ -19,7 +20,11 @@ def test_genomes_downloader():
 
 def test_multiple_downloads():
     for genome in tqdm(load_all_genomes(), "Genomes"):
-        download_genome(genome, clear_cache=True)
+        download_genome(
+            genome,
+            chromosomes=random.choice(load_chromosomes(genome)),
+            clear_cache=True
+        )
         os.remove(f"{genome}.fa")
 
 
