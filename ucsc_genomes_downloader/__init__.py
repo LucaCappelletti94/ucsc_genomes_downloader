@@ -1,6 +1,4 @@
-import warnings
-warnings.simplefilter("ignore", category=DeprecationWarning)
+from .genome import Genome
+from .utils import get_available_genomes
 
-from .download_genome import download_genome
-
-__all__ = ["download_genome"]
+__all__ = ["Genome", "get_available_genomes"]

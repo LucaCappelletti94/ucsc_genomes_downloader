@@ -1,33 +1,26 @@
-from ucsc_genomes_downloader import download_genome
-from ucsc_genomes_downloader.download_genome import load_chromosomes, load_all_genomes
-import os
-import json
-import pytest
-from tqdm.auto import tqdm
-import random
+from ucsc_genomes_downloader import Genome, get_available_genomes
 
 
-def test_genomes_downloader():
-    download_genome("hg19", clear_cache=False, chromosomes=["chr19"])
-    assert os.path.exists("hg19.fa")
-    download_genome("hg19", clear_cache=False, chromosomes=["chr19"])
-    assert os.path.exists("hg19.fa")
-    os.remove("hg19.fa")
-    download_genome("hg19", clear_cache=True, chromosomes=["chr19"])
-    assert os.path.exists("hg19.fa")
-    os.remove("hg19.fa")
+def test_create_new_genome_object():
+    hg19 = Genome("hg19")
+    assert len(hg19) == 25
+    assert hg19.is_cached()
+    hg19.delete()
 
 
-def test_multiple_downloads():
-    for genome in tqdm(load_all_genomes(), "Genomes"):
-        download_genome(
-            genome,
-            chromosomes=[random.choice(load_chromosomes(genome))],
-            clear_cache=True
-        )
-        os.remove(f"{genome}.fa")
+def test_lazy_download():
+    sacCer3 = Genome("sacCer3")
+    _ = sacCer3["chrM"]
+    sacCer3.delete()
 
 
-def test_invalid_chromosome():
-    with pytest.raises(ValueError):
-        download_genome("hg19", clear_cache=True, chromosomes=["chrU"])
+def test_eager_download():
+    sacCer3 = Genome("sacCer3", lazy_download=False)
+    _ = sacCer3["chrM"]
+    sacCer3.delete()
+
+
+def test_eager_load():
+    sacCer3 = Genome("sacCer3", lazy_load=False)
+    _ = sacCer3["chrM"]
+    sacCer3.delete()

@@ -16,3 +16,8 @@ coverage\.xml
 */__pycache__/*
 
 .coverage
+genomes
+*.ipynb
+.ipynb*
+.pytest_cache
+__pycache__
