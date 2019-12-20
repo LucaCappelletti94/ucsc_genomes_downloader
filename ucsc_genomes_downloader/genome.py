@@ -581,7 +581,7 @@ class Genome:
     @property
     def scientific_name(self):
         """Return genome's organism scientific name."""
-        return self._genome_informations["scientific_name"]
+        return self._genome_informations["scientificName"]
 
     @property
     def description(self):
