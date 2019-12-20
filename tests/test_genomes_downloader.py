@@ -9,7 +9,7 @@ def test_create_new_genome_object():
     assert len(hg19) == 25
     assert hg19.is_cached()
     for path in glob("{path}/*.json".format(
-        path=path
+        path=hg19.path
     )):
         os.remove(path)
     hg19 = Genome("hg19")
