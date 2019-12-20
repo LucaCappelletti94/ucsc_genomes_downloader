@@ -89,7 +89,7 @@ class Genome:
         clear_cache: bool = False,
         enable_cache: bool = True,
         warning: bool = True,
-        cache_directory: str = "genomes",
+        cache_directory: str = None,
         cache_directory_environment_variable: str = "UCSC_GENOMES_CACHE_PATH"
     ):
         """Instantiate a new Genome object.
@@ -173,10 +173,11 @@ class Genome:
 
         # Checking if a system wide cache directory
         # has been specified
-        try:
-            cache_directory = os.environ[cache_directory_environment_variable]
-        except KeyError:
-            pass
+        if cache_directory is None:
+            try:
+                cache_directory = os.environ[cache_directory_environment_variable]
+            except KeyError:
+                cache_directory = "genomes"
 
         self._cache_directory = "{cache_directory}/{assembly}".format(
             cache_directory=cache_directory,
