@@ -39,6 +39,7 @@ def test_eagerness():
     _ = sacCer3["chrM"]
     for _ in sacCer3.items():
         pass
+    print(sacCer3)
     sacCer3.delete()
 
 

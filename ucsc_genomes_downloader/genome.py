@@ -553,9 +553,9 @@ class Genome:
 
     def __str__(self):
         """Return string representation of current genome."""
-        return "{organism}, {scientificName}, {genome}, {date}, {chromosomes} chromosomes".format(
+        return "{organism}, {scientific_name}, {genome}, {date}, {chromosomes} chromosomes".format(
             organism=self.organism,
-            scientificName=self.scientificName,
+            scientific_name=self.scientific_name,
             genome=self.id,
             date=self.date,
             chromosomes=len(self)
@@ -579,9 +579,9 @@ class Genome:
         return self._genome_informations["organism"]
 
     @property
-    def scientificName(self):
+    def scientific_name(self):
         """Return genome's organism scientific name."""
-        return self._genome_informations["scientificName"]
+        return self._genome_informations["scientific_name"]
 
     @property
     def description(self):
