@@ -403,7 +403,8 @@ class Genome:
 
     def delete(self):
         """Remove the genome cache."""
-        shutil.rmtree(self._cache_directory)
+        if os.path.exists(self._cache_directory):
+            shutil.rmtree(self._cache_directory)
 
     def _download_chromosome(self, chromosome: str) -> str:
         """Download and return the nucleotides sequence for the given chromosome.

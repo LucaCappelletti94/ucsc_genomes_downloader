@@ -2,7 +2,7 @@ from requests import get, head, Timeout
 
 
 def get_endpoint(endpoint: str) -> str:
-    return "http://api.genome.ucsc.edu/{endpoint}".format(endpoint=endpoint)
+    return "https://api.genome.ucsc.edu/{endpoint}".format(endpoint=endpoint)
 
 
 def ucsc(endpoint: str):
