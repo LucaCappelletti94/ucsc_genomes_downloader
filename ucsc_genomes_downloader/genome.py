@@ -587,3 +587,8 @@ class Genome:
     def description(self):
         """Return genome's description as provided by UCSC."""
         return self._genome_informations["description"]
+
+    @property
+    def path(self):
+        """Return genome's path."""
+        return self._cache_directory
