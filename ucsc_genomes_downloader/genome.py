@@ -75,7 +75,7 @@ class Genome:
 
     def __init__(
         self,
-        genome_id: str,
+        assembly: str,
         unknown_chromosomes: bool = False,
         random_chromosomes: bool = False,
         haplotype_chromosomes: bool = False,
@@ -96,7 +96,7 @@ class Genome:
 
         Parameters
         ----------
-        genome_id: str,
+        assembly: str,
             UCSC Genome Browser assembly ID for required genome [1]_.
         unknown_chromosomes: bool = False,
             Whetever to download or not chromosomes containing
@@ -168,7 +168,7 @@ class Genome:
         self._warning = warning
         self._verbose = verbose
         self._leave_loading_bars = leave_loading_bars
-        self._id = genome_id
+        self._assembly = assembly
         self._enable_cache = enable_cache
 
         # Checking if a system wide cache directory
@@ -178,9 +178,9 @@ class Genome:
         except KeyError:
             pass
 
-        self._cache_directory = "{cache_directory}/{id}".format(
+        self._cache_directory = "{cache_directory}/{assembly}".format(
             cache_directory=cache_directory,
-            id=self.id
+            assembly=self.assembly
         )
 
         # If required delete cache
@@ -193,22 +193,23 @@ class Genome:
             self._genome_informations = self._load_genome_informations()
             self._chromosomes_lenghts = self._load_chromosomes()
         # Otherwise we check if the genome is available
-        elif self.id not in get_available_genomes():
+        elif self.assembly not in get_available_genomes():
             # If the genome is not available we raise a proper exception
             raise ValueError(
-                "Given genome {id} is not within the avalable genomes.".format(
-                    id=self.id
+                "Given genome {assembly} is not within the avalable genomes.".format(
+                    assembly=self.assembly
                 ))
 
         # Download genome informations if list is not already loaded
         if self._genome_informations is None:
-            self._genome_informations = get_genome_informations(self.id)
+            self._genome_informations = get_genome_informations(self.assembly)
             # If cache is enabled we store the obtained genome informations
             self._store_genome_informations()
 
         # Download chromosomes if list is not already loaded
         if self._chromosomes_lenghts is None:
-            self._chromosomes_lenghts = get_available_chromosomes(self.id)
+            self._chromosomes_lenghts = get_available_chromosomes(
+                self.assembly)
             # If cache is enabled we store the obtained chromosomes lenghts
             self._store_chromosomes()
 
@@ -235,8 +236,8 @@ class Genome:
                 self._chromosomes_lenghts,
                 disable=not verbose,
                 leave=leave_loading_bars,
-                desc="Filtering chromosomes for the genome {id}".format(
-                    id=self.id
+                desc="Filtering chromosomes for the genome {assembly}".format(
+                    assembly=self.assembly
                 )
             )
             if all(target not in chromosome.lower() for target in filters) and (
@@ -250,9 +251,10 @@ class Genome:
         # we raise a userwarning
         if len(self) == 0:
             raise ValueError(
-                "No chromosome remaining in chosen genome {id}"
+                "No chromosome remaining in chosen genome {assembly}"
                 "after executing desired filters"
-                "and checking for online availability".format(id=self.id)
+                "and checking for online availability".format(
+                    assembly=self.assembly)
             )
 
         # If lazy downloading is disabled
@@ -294,7 +296,7 @@ class Genome:
                 warnings.warn(
                     "Failed to load genome {genome} informations. "
                     "I will try to download them again afterwards.".format(
-                        genome=self.id
+                        genome=self.assembly
                     ),
                     RuntimeWarning
                 )
@@ -329,7 +331,7 @@ class Genome:
                 warnings.warn(
                     "Failed to load chromosomes for genome {genome}. "
                     "I will try to download them again afterwards.".format(
-                        genome=self.id
+                        genome=self.assembly
                     ),
                     RuntimeWarning
                 )
@@ -376,7 +378,7 @@ class Genome:
                     "Failed to load chromosome {chromosome} for genome {genome}. "
                     "I will try to download them again afterwards.".format(
                         chromosome=chromosome,
-                        genome=self.id
+                        genome=self.assembly
                     ),
                     RuntimeWarning
                 )
@@ -391,8 +393,8 @@ class Genome:
         ]
         for chromosome in tqdm(
             chromosomes,
-            desc="Downloading chromosomes for genome {id}".format(
-                id=self.id
+            desc="Downloading chromosomes for genome {assembly}".format(
+                assembly=self.assembly
             ),
             total=len(chromosomes),
             disable=not self._verbose,
@@ -419,7 +421,7 @@ class Genome:
         The nucleotide sequence for the given chromosomes.
         """
         chromosome_data = get_chromosome(
-            self.id,
+            self.assembly,
             chromosome,
             0,
             self._chromosomes_lenghts[chromosome]
@@ -435,8 +437,8 @@ class Genome:
         """Load into memory all the genome's chromosomes, downloading them when necessary."""
         for chromosome in tqdm(
             self,
-            desc="Loading chromosomes for genome {id}".format(
-                id=self.id
+            desc="Loading chromosomes for genome {assembly}".format(
+                assembly=self.assembly
             ),
             total=len(self),
             disable=not self._verbose,
@@ -540,14 +542,14 @@ class Genome:
         -------
         Boolean representing if given chromosome is available online.
         """
-        return is_chromosome_available_online(self.id, chromosome)
+        return is_chromosome_available_online(self.assembly, chromosome)
 
     def __str__(self):
         """Return string representation of current genome."""
         return "{organism}, {scientific_name}, {genome}, {date}, {chromosomes} chromosomes".format(
             organism=self.organism,
             scientific_name=self.scientific_name,
-            genome=self.id,
+            genome=self.assembly,
             date=self.date,
             chromosomes=len(self)
         )
@@ -555,9 +557,9 @@ class Genome:
     __repr__ = __str__
 
     @property
-    def id(self) -> str:
+    def assembly(self) -> str:
         """Return genome's UCSC Genome Browser assembly ID."""
-        return self._id
+        return self._assembly
 
     @property
     def date(self) -> datetime:
