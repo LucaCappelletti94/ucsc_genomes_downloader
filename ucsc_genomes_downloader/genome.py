@@ -540,14 +540,7 @@ class Genome:
         -------
         Boolean representing if given chromosome is available online.
         """
-        availability = is_chromosome_available_online(self.id, chromosome)
-        if not availability and self._warning:
-            raise UserWarning(
-                "Given chromosome {chromosome} is not available online for genome {genome}.".format(
-                    chromosome=chromosome,
-                    genome=self.id
-                ))
-        return availability
+        return is_chromosome_available_online(self.id, chromosome)
 
     def __str__(self):
         """Return string representation of current genome."""

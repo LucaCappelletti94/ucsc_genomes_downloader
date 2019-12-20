@@ -43,12 +43,6 @@ def test_eagerness():
     sacCer3.delete()
 
 
-def test_unavailable_genome():
-    with pytest.raises(UserWarning):
-        sacCer3 = Genome("sacCer3")
-        sacCer3["chr1"]
-
-
 def test_unavailable_chromosomes():
     with pytest.raises(ValueError):
         Genome("hg1")
