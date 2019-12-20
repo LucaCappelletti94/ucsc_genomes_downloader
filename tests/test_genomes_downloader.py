@@ -23,13 +23,15 @@ def test_lazy_download():
     sacCer3.delete()
 
 
-def test_eager_download():
+def test_eagerness():
     sacCer3 = Genome("sacCer3", lazy_download=False)
+    path = "{path}/chromosomes/chrM.json".format(
+        path=sacCer3.path
+    )
+    os.remove(path)
+    with open(path, "w") as f:
+        f.write("Totally not a chromosome")
     _ = sacCer3["chrM"]
-    sacCer3.delete()
-
-
-def test_eager_load():
     sacCer3 = Genome("sacCer3", lazy_load=False)
     _ = sacCer3["chrM"]
     sacCer3.delete()
