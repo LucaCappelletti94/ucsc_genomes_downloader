@@ -428,7 +428,7 @@ class Genome:
             path = self._chromosome_path(chromosome)
             os.makedirs(os.path.dirname(path), exist_ok=True)
             with open(path, "w") as f:
-                return json.dump(chromosome_data, f)
+                json.dump(chromosome_data, f)
         return chromosome_data["dna"]
 
     def load(self):
