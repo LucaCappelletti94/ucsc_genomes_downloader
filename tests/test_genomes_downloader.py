@@ -32,6 +32,7 @@ def test_eagerness():
     with open(path, "w") as f:
         f.write("Totally not a chromosome")
     _ = sacCer3["chrM"]
+    sacCer3.delete()
     sacCer3 = Genome("sacCer3", lazy_load=False)
     _ = sacCer3["chrM"]
     sacCer3.delete()
