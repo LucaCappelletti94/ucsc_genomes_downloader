@@ -40,6 +40,7 @@ def test_eagerness():
     for _ in sacCer3.items():
         pass
     print(sacCer3)
+    print(sacCer3.date)
     sacCer3.delete()
 
 
