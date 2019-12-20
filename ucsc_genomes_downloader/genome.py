@@ -542,13 +542,11 @@ class Genome:
         """
         availability = is_chromosome_available_online(self.id, chromosome)
         if not availability and self._warning:
-            warnings.warn(
+            raise UserWarning(
                 "Given chromosome {chromosome} is not available online for genome {genome}.".format(
                     chromosome=chromosome,
                     genome=self.id
-                ),
-                UserWarning
-            )
+                ))
         return availability
 
     def __str__(self):
