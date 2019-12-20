@@ -292,7 +292,7 @@ class Genome:
         except Exception:
             if self._warning:
                 warnings.warn(
-                    "Failed to load genome {genome} informations."
+                    "Failed to load genome {genome} informations. "
                     "I will try to download them again afterwards.".format(
                         genome=self.id
                     ),
@@ -327,7 +327,7 @@ class Genome:
         except Exception:
             if self._warning:
                 warnings.warn(
-                    "Failed to load chromosomes for genome {genome}."
+                    "Failed to load chromosomes for genome {genome}. "
                     "I will try to download them again afterwards.".format(
                         genome=self.id
                     ),
@@ -373,7 +373,7 @@ class Genome:
         except Exception:
             if self._warning:
                 warnings.warn(
-                    "Failed to load chromosome {chromosome} for genome {genome}."
+                    "Failed to load chromosome {chromosome} for genome {genome}. "
                     "I will try to download them again afterwards.".format(
                         chromosome=chromosome,
                         genome=self.id

@@ -13,6 +13,7 @@ def test_create_new_genome_object():
     )):
         os.remove(path)
     hg19 = Genome("hg19")
+    hg19 = Genome("hg19")
     hg19.delete()
 
 
