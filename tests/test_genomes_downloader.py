@@ -31,3 +31,8 @@ def test_eager_load():
 def test_unavailable_genome():
     with pytest.raises(ValueError):
         Genome("hg1")
+
+
+def test_empty_genome():
+    with pytest.raises(ValueError):
+        Genome("eboVir3")
