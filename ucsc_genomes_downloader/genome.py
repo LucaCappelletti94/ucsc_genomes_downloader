@@ -9,11 +9,15 @@ import json
 import os
 import shutil
 import dateparser
+import pandas as pd
 import warnings
+from math import ceil
 from datetime import datetime
 from tqdm.auto import tqdm
+from multiprocessing import Pool, cpu_count
 from typing import Dict, List, Generator
 from .utils import get_available_genomes, get_available_chromosomes, get_chromosome, get_genome_informations, is_chromosome_available_online
+from .utils import multiprocessing_gaps
 
 
 class Genome:
@@ -217,10 +221,11 @@ class Genome:
         filters = [
             target
             for target, enabled in {
-                "chrun": unknown_chromosomes,
+                "chru": unknown_chromosomes,
                 "scaffold": unknown_chromosomes,
                 "contig": unknown_chromosomes,
                 "super": unknown_chromosomes,
+                "chrbin": unknown_chromosomes,
                 "random": random_chromosomes,
                 "hap": haplotype_chromosomes,
                 "alt": alternative_chromosomes,
@@ -343,6 +348,21 @@ class Genome:
         os.makedirs(self._cache_directory, exist_ok=True)
         with open(self._chromosomes_path(), "w") as f:
             json.dump(self._chromosomes_lenghts, f, indent=4)
+
+    def _gaps_path(self) -> str:
+        """Return path to default gaps informations."""
+        return "{cache_directory}/gaps.bed.gz".format(
+            cache_directory=self._cache_directory
+        )
+
+    def _load_gaps(self) -> pd.DataFrame:
+        """Return a DataFrame with genome gaps."""
+        return pd.read_csv(self._gaps_path(), sep="\t")
+
+    def _store_gaps(self, gaps: pd.DataFrame):
+        """Store gaps informations into default cache directory."""
+        os.makedirs(self._cache_directory, exist_ok=True)
+        gaps.to_csv(self._gaps_path(), sep="\t", index=False)
 
     def _chromosome_path(self, chromosome: str) -> str:
         """Return path to the given chromosome.
@@ -556,6 +576,102 @@ class Genome:
         )
 
     __repr__ = __str__
+
+    def gaps(self):
+        """Return dataframe in BED format with informations on the gaps.
+
+        FAQs
+        ----
+        Why don't you just retrieve the gaps from the APIs?
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        The gaps track is not always available, therefore for providing a consistent
+        usage experience we compute the gaps when required. Additionally, this method
+        will work also when you make an offline request, that may sometimes be quite
+        useful.
+
+        Returns
+        -------
+        A DataFrame in BED format.
+        """
+        if os.path.exists(self._gaps_path()):
+            return self._load_gaps()
+        with Pool(min(cpu_count(), len(self))) as p:
+            gaps = pd.concat(list(tqdm(
+                p.imap(multiprocessing_gaps, self.items()),
+                total=len(self),
+                desc="Rendering gaps in {assembly}".format(
+                    assembly=self.assembly
+                )
+            )))
+            p.close()
+            p.join()
+        self._store_gaps(gaps)
+        return gaps
+
+    def filled(self):
+        """Return dataframe with BED-like columns with informations on the gaps."""
+        non_gap = []
+        gapped_chromosomes = []
+        for chrom, values in self.gaps().groupby("chrom"):
+            # We need to sort by the chromStart
+            # as we will need the rows to be ordered
+            # to be able to generate the complementary windows
+            values = values.sort_values(["chromStart"])
+            non_gap_values = pd.DataFrame({
+                "chrom": chrom,
+                "chromStart": values["chromEnd"][:-1].values,
+                "chromEnd": values["chromStart"][1:].values,
+            })
+
+            # If the chromosome lenght is not contained
+            # within the various chromEnd values it means that
+            # the final part of the chromosome is known
+            # and therefore considered filled.
+            # We need to add this additional row.
+            chromosome_lenght = self._chromosomes_lenghts[chrom]
+            if values.chromEnd.isin([chromosome_lenght]).any():
+                non_gap_values = non_gap_values.append({
+                    "chrom": chrom,
+                    "chromStart": values.chromEnd.max(),
+                    "chromEnd": chromosome_lenght
+                }, ignore_index=True)
+
+            # If the chromosome start, the 0 value,
+            # is not contained within the various chromStart values
+            # it means that the initial part of the chromosome
+            # is known and therefore considered filled.
+            # We need to add this additional row.
+            if values.chromStart.isin([0]).any():
+                non_gap_values = non_gap_values.append({
+                    "chrom": chrom,
+                    "chromStart": 0,
+                    "chromEnd": values.chromStart.min(),
+                }, ignore_index=True)
+
+            non_gap.append(non_gap_values)
+            gapped_chromosomes.append(chrom)
+
+        # When a chromosome does not appear to have
+        # any gap is considered fully filled
+        non_gap.append(pd.DataFrame([
+            {
+                "chrom": chrom,
+                "chromStart": 0,
+                "chromEnd": self._chromosomes_lenghts[chrom]
+            } for chrom in self if chrom not in gapped_chromosomes
+        ]))
+        return pd.concat(non_gap).sort_values(["chrom"]).reset_index(drop=True)
+
+    def bed_to_sequence(self, bed: pd.DataFrame):
+        return [
+            self[row.chrom][row.chromStart:row.chromEnd]
+            for _, row in tqdm(
+                bed.iterrows(),
+                total=bed.shape[0],
+                leave=self._leave_loading_bars,
+                disable=not self._verbose
+            )
+        ]
 
     @property
     def assembly(self) -> str:
