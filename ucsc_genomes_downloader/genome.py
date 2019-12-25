@@ -17,7 +17,7 @@ from tqdm.auto import tqdm
 from multiprocessing import Pool, cpu_count
 from typing import Dict, List, Generator
 from .utils import get_available_genomes, get_available_chromosomes, get_chromosome, get_genome_informations, is_chromosome_available_online
-from .utils import multiprocessing_gaps
+from .utils import multiprocessing_gaps, multiprocessing_extract_sequences
 
 
 class Genome:
@@ -600,8 +600,10 @@ class Genome:
                 p.imap(multiprocessing_gaps, self.items()),
                 total=len(self),
                 desc="Rendering gaps in {assembly}".format(
-                    assembly=self.assembly
-                )
+                    assembly=self.assembly,
+                    leave=self._leave_loading_bars
+                ),
+                disable=not self._verbose
             )))
             p.close()
             p.join()
@@ -663,15 +665,30 @@ class Genome:
         return pd.concat(non_gap).sort_values(["chrom"]).reset_index(drop=True)
 
     def bed_to_sequence(self, bed: pd.DataFrame):
-        return [
-            self[row.chrom][row.chromStart:row.chromEnd]
-            for _, row in tqdm(
-                bed.iterrows(),
-                total=bed.shape[0],
-                leave=self._leave_loading_bars,
-                disable=not self._verbose
-            )
-        ]
+        unique_chromosomes = len(bed.chrom.unique())
+        tasks = (
+            {
+                "bed": group,
+                "sequence": self[chrom]
+            }
+            for chrom, group in bed.groupby("chrom")
+        )
+        with Pool(min(unique_chromosomes, cpu_count())) as p:
+            sequences = pd.concat(list(tqdm(
+                p.imap(
+                    multiprocessing_extract_sequences,
+                    tasks
+                ),
+                total=unique_chromosomes,
+                desc="Rendering sequences in {assembly}".format(
+                    assembly=self.assembly
+                ),
+                disable=not self._verbose,
+                leave=self._leave_loading_bars
+            )))
+            p.close()
+            p.join()
+        return sequences
 
     @property
     def assembly(self) -> str:
