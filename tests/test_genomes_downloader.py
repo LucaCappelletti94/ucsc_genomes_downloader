@@ -17,6 +17,15 @@ def test_create_new_genome_object():
     hg19.delete()
 
 
+def test_gaps():
+    sacCer3 = Genome("sacCer3")
+    sacCer3.filled()
+    sacCer3.delete()
+    hg19 = Genome("hg19")
+    hg19.filled()
+    hg19.delete()
+
+
 def test_lazy_download():
     sacCer3 = Genome("sacCer3")
     _ = sacCer3["chrM"]
@@ -39,7 +48,6 @@ def test_eagerness():
     _ = sacCer3["chrM"]
     for _ in sacCer3.items():
         pass
-    print(sacCer3)
     sacCer3.delete()
 
 
