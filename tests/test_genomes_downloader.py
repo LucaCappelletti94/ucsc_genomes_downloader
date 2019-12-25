@@ -20,8 +20,10 @@ def test_create_new_genome_object():
 def test_gaps():
     sacCer3 = Genome("sacCer3")
     sacCer3.filled()
+    sacCer3.filled()
     sacCer3.delete()
     hg19 = Genome("hg19")
+    hg19.filled()
     hg19.filled()
     hg19.delete()
 
