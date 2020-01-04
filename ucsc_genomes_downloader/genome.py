@@ -592,7 +592,7 @@ class Genome:
         """
         if os.path.exists(self._gaps_path()):
             return self._load_gaps()
-        with Pool(min(cpu_count(), len(self))) as p:
+        with Pool(max(2, min(cpu_count(), len(self)))) as p:
             gaps = pd.concat(list(tqdm(
                 p.imap(multiprocessing_gaps, self.items()),
                 total=len(self),
@@ -670,7 +670,7 @@ class Genome:
             }
             for chrom, group in bed.groupby("chrom")
         )
-        with Pool(min(unique_chromosomes, cpu_count())) as p:
+        with Pool(max(2, min(unique_chromosomes, cpu_count()))) as p:
             sequences = pd.concat(list(tqdm(
                 p.imap(
                     multiprocessing_extract_sequences,
