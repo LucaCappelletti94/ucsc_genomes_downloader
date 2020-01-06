@@ -5,16 +5,16 @@ import os
 
 
 def test_create_new_genome_object():
-    hg19 = Genome("hg19", clear_cache=True)
-    assert len(hg19) == 25
-    assert hg19.is_cached()
+    sacCer3 = Genome("sacCer3", clear_cache=True)
+    assert len(sacCer3) == 25
+    assert sacCer3.is_cached()
     for path in glob("{path}/*.json".format(
-        path=hg19.path
+        path=sacCer3.path
     )):
         os.remove(path)
-    hg19 = Genome("hg19")
-    hg19 = Genome("hg19")
-    hg19.delete()
+    sacCer3 = Genome("sacCer3")
+    sacCer3 = Genome("sacCer3")
+    sacCer3.delete()
 
 
 def test_get_available_genomes():
@@ -23,6 +23,7 @@ def test_get_available_genomes():
 
 def test_gaps():
     sacCer3 = Genome("sacCer3")
+    chrM = sacCer3["chrM"]
     sacCer3.filled()
     sacCer3.bed_to_sequence(sacCer3.filled().head(1))
     sacCer3.delete()
@@ -30,13 +31,6 @@ def test_gaps():
     hg19.filled()
     hg19.filled()
     hg19.delete()
-
-
-def test_lazy_download():
-    sacCer3 = Genome("sacCer3")
-    sacCer3["chrM"]
-    sacCer3["chrM"]
-    sacCer3.delete()
 
 
 def test_eagerness():
