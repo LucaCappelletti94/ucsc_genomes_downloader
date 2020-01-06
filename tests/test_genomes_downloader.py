@@ -14,6 +14,11 @@ def test_create_new_genome_object():
         os.remove(path)
     sacCer3 = Genome("sacCer3")
     sacCer3 = Genome("sacCer3")
+    sacCer3.date
+    sacCer3.organism
+    sacCer3.scientific_name
+    sacCer3.description
+    print(sacCer3)
     sacCer3.delete()
 
 
