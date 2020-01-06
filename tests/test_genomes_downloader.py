@@ -17,6 +17,10 @@ def test_create_new_genome_object():
     hg19.delete()
 
 
+def test_get_available_genomes():
+    get_available_genomes()
+
+
 def test_gaps():
     sacCer3 = Genome("sacCer3")
     sacCer3.filled()
