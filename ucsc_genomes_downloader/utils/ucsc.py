@@ -1,4 +1,4 @@
-from requests import get, head, Timeout
+from requests import get, head
 
 
 def get_endpoint(endpoint: str) -> str:
