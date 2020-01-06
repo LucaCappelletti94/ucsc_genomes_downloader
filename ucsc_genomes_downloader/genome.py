@@ -11,11 +11,10 @@ import shutil
 import dateparser
 import pandas as pd
 import warnings
-from math import ceil
 from datetime import datetime
 from tqdm.auto import tqdm
 from multiprocessing import Pool, cpu_count
-from typing import Dict, List, Generator
+from typing import Dict, Generator
 from .utils import get_available_genomes, get_available_chromosomes, get_chromosome, get_genome_informations, is_chromosome_available_online
 from .utils import multiprocessing_gaps, multiprocessing_extract_sequences
 
@@ -178,7 +177,8 @@ class Genome:
         # Checking if a system wide cache directory
         # has been specified
         if cache_directory is None:
-                cache_directory = os.environ.get(cache_directory_environment_variable, "genomes")
+            cache_directory = os.environ.get(
+                cache_directory_environment_variable, "genomes")
 
         self._cache_directory = "{cache_directory}/{assembly}".format(
             cache_directory=cache_directory,
@@ -463,7 +463,7 @@ class Genome:
             dynamic_ncols=True,
             leave=self._leave_loading_bars
         ):
-            self[chromosome]
+            self.__getitem__(chromosome)
 
     def __len__(self) -> int:
         """Return the number of chromosomes in current genome."""
