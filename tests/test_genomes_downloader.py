@@ -34,8 +34,8 @@ def test_gaps():
 
 def test_lazy_download():
     sacCer3 = Genome("sacCer3")
-    _ = sacCer3["chrM"]
-    _ = sacCer3["chrM"]
+    sacCer3["chrM"]
+    sacCer3["chrM"]
     sacCer3.delete()
 
 
@@ -47,11 +47,11 @@ def test_eagerness():
     os.remove(path)
     with open(path, "w") as f:
         f.write("Totally not a chromosome")
-    _ = sacCer3["chrM"]
+    sacCer3["chrM"]
     assert "chrM" in sacCer3
     sacCer3.delete()
     sacCer3 = Genome("sacCer3", lazy_load=False)
-    _ = sacCer3["chrM"]
+    sacCer3["chrM"]
     for _ in sacCer3.items():
         pass
     sacCer3.delete()
