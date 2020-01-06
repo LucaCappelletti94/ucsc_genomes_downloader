@@ -178,10 +178,7 @@ class Genome:
         # Checking if a system wide cache directory
         # has been specified
         if cache_directory is None:
-            try:
-                cache_directory = os.environ[cache_directory_environment_variable]
-            except KeyError:
-                cache_directory = "genomes"
+                cache_directory = os.environ.get(cache_directory_environment_variable, "genomes")
 
         self._cache_directory = "{cache_directory}/{assembly}".format(
             cache_directory=cache_directory,
