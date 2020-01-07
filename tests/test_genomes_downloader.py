@@ -31,7 +31,7 @@ def test_simulated_download_failure():
     path = sacCer3._chromosome_path("chrM")
     with open(path, "w") as f:
         f.write("Totally not JSON")
-    chrM = sacCer3["chrM"]
+    _ = sacCer3["chrM"]
     assert "chrM" in sacCer3
 
 
