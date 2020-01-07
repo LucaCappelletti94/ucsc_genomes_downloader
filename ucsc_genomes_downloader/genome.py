@@ -66,6 +66,22 @@ class Genome:
         if hg19.is_cached():
             print("Genome is cached!")
 
+    Getting gaps regions
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    .. code:: python
+
+        all_gaps = hg19.gaps() # Returns gaps for all chromosomes
+        chrM_gaps = hg19.gaps(chromosomes=["chrM"]) # Returns gaps for chromosome chrM
+
+    Getting filled regions
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    .. code:: python
+
+        all_filled = hg19.filled() # Returns filled for all chromosomes
+        chrM_filled = hg19.filled(chromosomes=["chrM"]) # Returns filled for chromosome chrM
+
     Removing genome's cache
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

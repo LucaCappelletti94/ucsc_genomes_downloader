@@ -21,28 +21,72 @@ Since some software handling coverages sometime get slightly different results, 
 Supported genomes
 -----------------
 
+Usage examples
+--------------
 
-Usage example
----------------------------------------
-Suppose you want to download the genome _hg19:
-
-.. code:: python
-
-    from ucsc_genomes_downloader import download_genome
-    download_genome("hg19")
-
-There are a couple options, here's a more complete example:
+Simply instanziate a new genome
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code:: python
 
-    from ucsc_genomes_downloader import download_genome
-    download_genome(
-        genome="hg19",
-        path=".", # The path where to save the genome, by default the current directory.
-        chromosomes=["chr19"], # List of chromosomes to download. By default, all.
-        cache_dir=".genome", # The path where to store the download cache.
-        clear_cache=True # Whetever to delete the download cache, by default True.
-    )
+    from ucsc_genomes_downloader import Genome
+    hg19 = Genome("hg19")
+
+Downloading lazily a genome
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code:: python
+
+    from ucsc_genomes_downloader import Genome
+    sacCer3 = Genome("sacCer3")
+    chrM = sacCer3["chrM"] # Downloads and returns mitochondrial genome
+
+Downloading eagerly a genome
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code:: python
+
+    from ucsc_genomes_downloader import Genome
+    sacCer3 = Genome("sacCer3", lazy_download=False)
+
+Loading eagerly a genome
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code:: python
+
+    from ucsc_genomes_downloader import Genome
+    sacCer3 = Genome("sacCer3", lazy_load=False)
+
+Testing if a genome is cached
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code:: python
+
+    if hg19.is_cached():
+        print("Genome is cached!")
+
+Getting gaps regions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code:: python
+
+    all_gaps = hg19.gaps() # Returns gaps for all chromosomes
+    chrM_gaps = hg19.gaps(chromosomes=["chrM"]) # Returns gaps for chromosome chrM
+
+Getting filled regions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code:: python
+
+    all_filled = hg19.filled() # Returns filled for all chromosomes
+    chrM_filled = hg19.filled(chromosomes=["chrM"]) # Returns filled for chromosome chrM
+
+Removing genome's cache
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code:: python
+
+    hg19.delete()
 
 .. _hg19: https://www.ncbi.nlm.nih.gov/assembly/GCF_000001405.13/
 
