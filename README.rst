@@ -68,6 +68,7 @@ Testing if a genome is cached
 
 Getting gaps regions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+If you need a bed file containing the regions with gaps you can use:
 
 .. code:: python
 
@@ -76,11 +77,21 @@ Getting gaps regions
 
 Getting filled regions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+If you need a bed file containing the filled regions you can use:
 
 .. code:: python
 
     all_filled = hg19.filled() # Returns filled for all chromosomes
     chrM_filled = hg19.filled(chromosomes=["chrM"]) # Returns filled for chromosome chrM
+
+Getting BED sequences
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Given a BED-like pandas dataframe, you can get the corresponding sequences as follows:
+
+.. code:: python
+
+    my_bed = pd.read_csv("path/to/my.bed", sep="\t")
+    sequences = hg19.bed_to_sequence(my_bed)
 
 Removing genome's cache
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
