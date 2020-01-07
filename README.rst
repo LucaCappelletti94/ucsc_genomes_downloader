@@ -18,9 +18,6 @@ Since some software handling coverages sometime get slightly different results, 
 
 |coveralls| |sonar_coverage| |code_climate_coverage|
 
-Supported genomes
------------------
-
 Usage examples
 --------------
 
@@ -87,6 +84,18 @@ Removing genome's cache
 .. code:: python
 
     hg19.delete()
+
+Utilities
+-------------------------------
+
+Retrieving a list of the available genomes
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+You can get a complete list of the genomes available from the UCSC website with the following method:
+
+.. code:: python
+
+    from ucsc_genomes_downloader import get_available_genomes
+    all_genomes = get_available_genomes()
 
 .. _hg19: https://www.ncbi.nlm.nih.gov/assembly/GCF_000001405.13/
 
