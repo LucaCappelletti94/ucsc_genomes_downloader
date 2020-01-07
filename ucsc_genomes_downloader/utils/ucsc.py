@@ -1,4 +1,4 @@
-from requests import get, head
+from requests import get
 
 
 def get_endpoint(endpoint: str) -> str:
@@ -32,10 +32,6 @@ def chromosome_url(genome: str, chromosome: str, start: int, end: int) -> str:
         start=start,
         end=end
     )
-
-
-def is_chromosome_available_online(genome: str, chromosome: str) -> bool:
-    return head(get_endpoint(chromosome_url(genome, chromosome, 0, 1))).status_code == 200
 
 
 def get_chromosome(genome: str, chromosome: str, start: int, end: int):

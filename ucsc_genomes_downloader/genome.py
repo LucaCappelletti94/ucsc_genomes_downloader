@@ -14,8 +14,8 @@ import warnings
 from datetime import datetime
 from tqdm.auto import tqdm
 from multiprocessing import Pool, cpu_count
-from typing import Dict, Generator
-from .utils import get_available_genomes, get_available_chromosomes, get_chromosome, get_genome_informations, is_chromosome_available_online
+from typing import Dict, Generator, List
+from .utils import get_available_genomes, get_available_chromosomes, get_chromosome, get_genome_informations
 from .utils import multiprocessing_gaps, multiprocessing_extract_sequences
 
 
@@ -246,7 +246,7 @@ class Genome:
             if all(target not in chromosome.lower() for target in filters) and (
                 unknown_chromosomes or
                 chromosome.lower().startswith("chr")
-            ) and self.is_chromosome_available(chromosome)
+            )
         }
 
         # If no chromosome remains after filtering,
@@ -345,21 +345,6 @@ class Genome:
         os.makedirs(self._cache_directory, exist_ok=True)
         with open(self._chromosomes_path(), "w") as f:
             json.dump(self._chromosomes_lenghts, f, indent=4)
-
-    def _gaps_path(self) -> str:
-        """Return path to default gaps informations."""
-        return "{cache_directory}/gaps.bed.gz".format(
-            cache_directory=self._cache_directory
-        )
-
-    def _load_gaps(self) -> pd.DataFrame:
-        """Return a DataFrame with genome gaps."""
-        return pd.read_csv(self._gaps_path(), sep="\t")
-
-    def _store_gaps(self, gaps: pd.DataFrame):
-        """Store gaps informations into default cache directory."""
-        os.makedirs(self._cache_directory, exist_ok=True)
-        gaps.to_csv(self._gaps_path(), sep="\t", index=False)
 
     def _chromosome_path(self, chromosome: str) -> str:
         """Return path to the given chromosome.
@@ -515,20 +500,6 @@ class Genome:
         for chromosome in self._chromosomes:
             yield chromosome
 
-    def is_chromosome_available(self, chromosome: str) -> bool:
-        """Return boolean representing if given chromosome is available either locally or online.
-
-        Parameters
-        ----------
-        chromosome: str,
-            The chromosome identifier, such as chr1, chrX, chrM...
-
-        Returns
-        -------
-        Boolean representing if given chromosome is available either locally or online.
-        """
-        return self.is_chromosome_cached(chromosome) or self.is_chromosome_online(chromosome)
-
     def is_chromosome_cached(self, chromosome: str) -> bool:
         """Return a boolean representing if given chromosome is cached.
 
@@ -543,25 +514,6 @@ class Genome:
         """
         return os.path.exists(self._chromosome_path(chromosome))
 
-    def is_chromosome_online(self, chromosome: str) -> bool:
-        """Return a boolean representing if given chromosome is available through JSON APIs.
-
-        Parameters
-        ----------
-        chromosome: str,
-            The chromosome identifier, such as chr1, chrX, chrM...
-
-        Raises
-        ------
-        UserWarning:
-            If given chromosome is not available online.
-
-        Returns
-        -------
-        Boolean representing if given chromosome is available online.
-        """
-        return is_chromosome_available_online(self.assembly, chromosome)
-
     def __str__(self):
         """Return string representation of current genome."""
         return "{organism}, {scientific_name}, {genome}, {date}, {chromosomes} chromosomes".format(
@@ -574,8 +526,13 @@ class Genome:
 
     __repr__ = __str__
 
-    def gaps(self):
+    def gaps(self, chromosomes: List[str] = None):
         """Return dataframe in BED format with informations on the gaps.
+
+        Parameters
+        ----------
+        chromosomes: List[str] = None,
+            List of the chromosomes to parse, by default all.
 
         FAQs
         ----
@@ -588,30 +545,44 @@ class Genome:
 
         Returns
         -------
-        A DataFrame in BED format.
+        A DataFrame in BED format containing the gapped regions.
         """
-        if os.path.exists(self._gaps_path()):
-            return self._load_gaps()
+        if chromosomes is None:
+            chromosomes = list(self)
         with Pool(min(cpu_count(), len(self))) as p:
             gaps = pd.concat(list(tqdm(
-                p.imap(multiprocessing_gaps, self.items()),
-                total=len(self),
+                p.imap(multiprocessing_gaps, (
+                    (
+                        chromosome, self[chromosome]
+                    )
+                    for chromosome in chromosomes
+                )),
+                total=len(chromosomes),
                 desc="Rendering gaps in {assembly}".format(
-                    assembly=self.assembly,
-                    leave=self._leave_loading_bars
+                    assembly=self.assembly
                 ),
+                leave=self._leave_loading_bars,
                 disable=not self._verbose
             )))
             p.close()
             p.join()
-        self._store_gaps(gaps)
         return gaps
 
-    def filled(self):
-        """Return dataframe with BED-like columns with informations on the gaps."""
+    def filled(self,  chromosomes: List[str] = None):
+        """Return dataframe with BED-like columns with informations on the gaps.
+
+        Parameters
+        ----------
+        chromosomes: List[str] = None,
+            List of the chromosomes to parse, by default all.
+
+        Returns
+        -------
+        A DataFrame in BED format containing the filled regions.
+        """
         non_gap = []
         gapped_chromosomes = []
-        for chrom, values in self.gaps().groupby("chrom"):
+        for chrom, values in self.gaps(chromosomes).groupby("chrom"):
             # We need to sort by the chromStart
             # as we will need the rows to be ordered
             # to be able to generate the complementary windows
