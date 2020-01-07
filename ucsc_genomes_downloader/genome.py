@@ -582,6 +582,8 @@ class Genome:
         """
         non_gap = []
         gapped_chromosomes = []
+        if chromosomes is None:
+            chromosomes = list(self)
         for chrom, values in self.gaps(chromosomes).groupby("chrom"):
             # We need to sort by the chromStart
             # as we will need the rows to be ordered
@@ -628,7 +630,7 @@ class Genome:
                 "chrom": chrom,
                 "chromStart": 0,
                 "chromEnd": self._chromosomes_lenghts[chrom]
-            } for chrom in self if chrom not in gapped_chromosomes
+            } for chrom in chromosomes if chrom not in gapped_chromosomes
         ]))
         return pd.concat(non_gap).sort_values(["chrom"]).reset_index(drop=True)
 
