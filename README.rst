@@ -23,14 +23,16 @@ Usage examples
 
 Simply instanziate a new genome
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Create a new `Genome` object for the given genome hg19.
 
 .. code:: python
 
     from ucsc_genomes_downloader import Genome
     hg19 = Genome("hg19")
 
-Downloading lazily a genome
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Downloading lazily a genome's chromosome
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Download mitochondrial genome "chromosome" for the genome "sacCer3" (downloads the chromosomes only when required).
 
 .. code:: python
 
@@ -40,6 +42,7 @@ Downloading lazily a genome
 
 Downloading eagerly a genome
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Download all genome's chromosomes immediately.
 
 .. code:: python
 
@@ -48,6 +51,7 @@ Downloading eagerly a genome
 
 Loading eagerly a genome
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Load (and downloads if necessary) into RAM all the genome's chromosomes immediately.
 
 .. code:: python
 
