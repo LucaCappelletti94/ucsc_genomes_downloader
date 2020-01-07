@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: ucsc-genomes-downloader
-Version: 1.0.2
+Version: 1.1.0
 Summary: Python package to quickly download genomes from the UCSC.
 Home-page: https://github.com/LucaCappelletti94/ucsc_genomes_downloader
 Author: Luca Cappelletti
@@ -26,27 +26,99 @@ Description: ucsc_genomes_downloader
         
         |coveralls| |sonar_coverage| |code_climate_coverage|
         
-        Usage example
-        ---------------------------------------
-        Suppose you want to download the genome _hg19:
+        Usage examples
+        --------------
+        
+        Simply instanziate a new genome
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        Create a new `Genome` object for the given genome hg19.
         
         .. code:: python
         
-            from ucsc_genomes_downloader import download_genome
-            download_genome("hg19")
+            from ucsc_genomes_downloader import Genome
+            hg19 = Genome("hg19")
         
-        There are a couple options, here's a more complete example:
+        Downloading lazily a genome's chromosome
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        Download mitochondrial genome "chromosome" for the genome "sacCer3" (downloads the chromosomes only when required).
         
         .. code:: python
         
-            from ucsc_genomes_downloader import download_genome
-            download_genome(
-                genome="hg19",
-                path=".", # The path where to save the genome, by default the current directory.
-                chromosomes=["chr19"], # List of chromosomes to download. By default, all.
-                cache_dir=".genome", # The path where to store the download cache.
-                clear_cache=True # Whetever to delete the download cache, by default True.
-            )
+            from ucsc_genomes_downloader import Genome
+            sacCer3 = Genome("sacCer3")
+            chrM = sacCer3["chrM"] # Downloads and returns mitochondrial genome
+        
+        Downloading eagerly a genome
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        Download all genome's chromosomes immediately.
+        
+        .. code:: python
+        
+            from ucsc_genomes_downloader import Genome
+            sacCer3 = Genome("sacCer3", lazy_download=False)
+        
+        Loading eagerly a genome
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        Load (and downloads if necessary) into RAM all the genome's chromosomes immediately.
+        
+        .. code:: python
+        
+            from ucsc_genomes_downloader import Genome
+            sacCer3 = Genome("sacCer3", lazy_load=False)
+        
+        Testing if a genome is cached
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        
+        .. code:: python
+        
+            if hg19.is_cached():
+                print("Genome is cached!")
+        
+        Getting gaps regions
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        If you need a bed file containing the regions with gaps you can use:
+        
+        .. code:: python
+        
+            all_gaps = hg19.gaps() # Returns gaps for all chromosomes
+            chrM_gaps = hg19.gaps(chromosomes=["chrM"]) # Returns gaps for chromosome chrM
+        
+        Getting filled regions
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        If you need a bed file containing the filled regions you can use:
+        
+        .. code:: python
+        
+            all_filled = hg19.filled() # Returns filled for all chromosomes
+            chrM_filled = hg19.filled(chromosomes=["chrM"]) # Returns filled for chromosome chrM
+        
+        Getting BED sequences
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        Given a BED-like pandas dataframe, you can get the corresponding sequences as follows:
+        
+        .. code:: python
+        
+            my_bed = pd.read_csv("path/to/my.bed", sep="\t")
+            sequences = hg19.bed_to_sequence(my_bed)
+        
+        Removing genome's cache
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        
+        .. code:: python
+        
+            hg19.delete()
+        
+        Utilities
+        -------------------------------
+        
+        Retrieving a list of the available genomes
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        You can get a complete list of the genomes available from the UCSC website with the following method:
+        
+        .. code:: python
+        
+            from ucsc_genomes_downloader import get_available_genomes
+            all_genomes = get_available_genomes()
         
         .. _hg19: https://www.ncbi.nlm.nih.gov/assembly/GCF_000001405.13/
         

@@ -1,5 +1,7 @@
 requests
-auto_tqdm
+tqdm
+dateparser
+pandas
 
 [test]
 coveralls
