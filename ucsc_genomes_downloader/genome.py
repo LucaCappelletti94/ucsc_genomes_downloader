@@ -14,7 +14,7 @@ import warnings
 from datetime import datetime
 from tqdm.auto import tqdm
 from multiprocessing import Pool, cpu_count
-from typing import Dict, Generator, List
+from typing import Dict, Generator, List, Tuple
 from .utils import get_available_genomes, get_available_chromosomes, get_chromosome, get_genome_informations
 from .utils import multiprocessing_gaps, multiprocessing_extract_sequences
 
@@ -33,46 +33,14 @@ class Genome:
         from ucsc_genomes_downloader import Genome
         hg19 = Genome("hg19")
 
-    Downloading lazily a genome
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    .. code:: python
-
-        from ucsc_genomes_downloader import Genome
-        sacCer3 = Genome("sacCer3")
-        chrM = sacCer3["chrM"] # Downloads and returns mitochondrial genome
-
-    Downloading eagerly a genome
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    .. code:: python
-
-        from ucsc_genomes_downloader import Genome
-        sacCer3 = Genome("sacCer3", lazy_download=False)
-
-    Loading eagerly a genome
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    .. code:: python
-
-        from ucsc_genomes_downloader import Genome
-        sacCer3 = Genome("sacCer3", lazy_load=False)
-
-    Testing if a genome is cached
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    .. code:: python
-
-        if hg19.is_cached():
-            print("Genome is cached!")
-
     Getting gaps regions
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     .. code:: python
 
         all_gaps = hg19.gaps() # Returns gaps for all chromosomes
-        chrM_gaps = hg19.gaps(chromosomes=["chrM"]) # Returns gaps for chromosome chrM
+        # Returns gaps for chromosome chrM
+        chrM_gaps = hg19.gaps(chromosomes=["chrM"])
 
     Getting filled regions
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -80,7 +48,8 @@ class Genome:
     .. code:: python
 
         all_filled = hg19.filled() # Returns filled for all chromosomes
-        chrM_filled = hg19.filled(chromosomes=["chrM"]) # Returns filled for chromosome chrM
+        # Returns filled for chromosome chrM
+        chrM_filled = hg19.filled(chromosomes=["chrM"])
 
     Removing genome's cache
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -95,21 +64,10 @@ class Genome:
     def __init__(
         self,
         assembly: str,
-        unknown_chromosomes: bool = False,
-        random_chromosomes: bool = False,
-        haplotype_chromosomes: bool = False,
-        alternative_chromosomes: bool = False,
-        fixed_chromosomes: bool = False,
-        mitochondrial_genome: bool = True,
-        lazy_load: bool = True,
-        lazy_download: bool = True,
+        chromosomes: Tuple[str] = None,
+        filters: Tuple[str] = ("chru", "scaffold", "contig", "super", "chrbin", "random", "hap", "alt", "fix"),
         verbose: bool = True,
-        leave_loading_bars: bool = False,
-        clear_cache: bool = False,
-        enable_cache: bool = True,
-        warning: bool = True,
-        cache_directory: str = None,
-        cache_directory_environment_variable: str = "UCSC_GENOMES_CACHE_PATH"
+        cache_directory: str = "genomes"
     ):
         """Instantiate a new Genome object.
 
@@ -117,50 +75,17 @@ class Genome:
         ----------
         assembly: str,
             UCSC Genome Browser assembly ID for required genome [1]_.
-        unknown_chromosomes: bool = False,
-            Whetever to download or not chromosomes containing
-            clone contigs that cannot be confidently placed on
-            a specific chromosome [1]_.
-        random_chromosomes: bool = False,
-            Whetever to download or not data related to sequence
-            that is known to be in a particular chromosome,
-            but could not be reliably ordered within the current sequence [1]_.
-        haplotype_chromosomes: bool = False,
-            Whetever to download or not data related to sequence
-            for alternative haplotypes [1]_.
-        alternative_chromosomes: bool = False,
-            Whetever to download or not alternative sequences
-            that differ from the reference genome currently
-            available for a few assemblies including danRer11, hg19, and hg38 [1]_.
-        fixed_chromosomes: bool = False,
-            Whetever to download or not fix patches currently
-            available for the hg19 and hg38 assemblies
-            that represent changes to the existing sequence [1]_.
-        mitochondrial_genome: bool = True,
-            Whetever to download or not the mitocondial genome [2]_.
-            A warning is raised if the mitochondrial genome is required
-            but none is available for the specified genome.
-        lazy_load: bool = True,
-            Whetever to lazily load chromosomes as they are required (lazy_load=True) or
-            to retrieve them immediately (lazy_load=False).
-        lazy_download: bool = True,
-            Whetever to lazily download chromosomes as they are required (lazy_download=True) or
-            to retrieve them immediately (lazy_download=False). Only available when cache is enabled.
+        chromosomes: Tuple[str] = None,
+            Tuple with the chromosomes to download.
+            If None (default) all the chromosomes except
+            the one filtered out are downloaded.
+        filters: Tuple[str] = ("chru", "scaffold", "contig", "super", "chrbin", "random", "hap", "alt", "fix"),
+            Tuple containing substring of chromosomes NOT to download.
+            If the `chromosomes` parameter is used, no such filter is applied.
         verbose: bool = True,
             Whetever to show a loading bar when retrieving chromosomes.
-        leave_loading_bars: bool = False,
-            Whetever to leave or not the loading bars after loading is complete.
-        clear_cache: bool = False,
-            Whetever to clear cache or not before retrieving chromosomes.
-        enable_cache: bool = True,
-            Whetever to store data to and load data from given cache directory.
-        warning: bool = True,
-            Whetever to raise warning when corner cases are detected.
         cache_directory: str = "genomes",
             Position where to store the downloaded genomes.
-        cache_directory_environment_variable: str = "UCSC_GENOMES_CACHE_PATH",
-            Environment variable where to check if a system-wide directory has
-            been specified.
 
         Raises
         ------
@@ -178,36 +103,18 @@ class Genome:
         References
         ----------
         .. [1] https://genome.ucsc.edu/FAQ/FAQdownloads.html
-        .. [2] https://en.wikipedia.org/wiki/Mitochondrial_DNA
-        .. [3] http://hgdownload.soe.ucsc.edu/downloads.html
         """
 
         self._chromosomes_lenghts = None
         self._genome_informations = None
-        self._warning = warning
         self._verbose = verbose
-        self._leave_loading_bars = leave_loading_bars
         self._assembly = assembly
-        self._enable_cache = enable_cache
 
-        # Checking if a system wide cache directory
-        # has been specified
-        if cache_directory is None:
-            cache_directory = os.environ.get(
-                cache_directory_environment_variable, "genomes")
-
-        self._cache_directory = "{cache_directory}/{assembly}".format(
-            cache_directory=cache_directory,
-            assembly=self.assembly
-        )
-
-        # If required delete cache
-        if clear_cache:
-            self.delete()
+        self._cache_directory = os.path.join(cache_directory, self.assembly)
 
         # If cache is enabled and a directory for the genome
         # exists within the cache we try to load the genome data
-        if enable_cache and self.is_cached():
+        if os.path.exists(self._cache_directory):
             self._genome_informations = self._load_genome_informations()
             self._chromosomes_lenghts = self._load_chromosomes()
         # Otherwise we check if the genome is available
@@ -231,38 +138,12 @@ class Genome:
             # If cache is enabled we store the obtained chromosomes lenghts
             self._store_chromosomes()
 
-        filters = [
-            target
-            for target, enabled in {
-                "chru": unknown_chromosomes,
-                "scaffold": unknown_chromosomes,
-                "contig": unknown_chromosomes,
-                "super": unknown_chromosomes,
-                "chrbin": unknown_chromosomes,
-                "random": random_chromosomes,
-                "hap": haplotype_chromosomes,
-                "alt": alternative_chromosomes,
-                "fix": fixed_chromosomes,
-                "chrm": mitochondrial_genome
-            }.items()
-            if not enabled
-        ]
-
         # Filtering chromosomes
         self._chromosomes = {
-            chromosome: None
-            for chromosome in tqdm(
-                self._chromosomes_lenghts,
-                disable=not verbose,
-                leave=leave_loading_bars,
-                desc="Filtering chromosomes for the genome {assembly}".format(
-                    assembly=self.assembly
-                )
-            )
-            if all(target not in chromosome.lower() for target in filters) and (
-                unknown_chromosomes or
-                chromosome.lower().startswith("chr")
-            )
+            chrom: None
+            for chrom in self._chromosomes_lenghts
+            if all(target not in chrom.lower() for target in filters) and chromosomes is None or
+            chromosomes is not None and chrom in chromosomes
         }
 
         # If no chromosome remains after filtering,
@@ -276,21 +157,7 @@ class Genome:
                     assembly=self.assembly)
             )
 
-        # If lazy downloading is disabled
-        # we immediately proceed to download
-        # all the required chromosomes.
-        if not lazy_download:
-            self.download()
-
-        # If lazy loading is disabled
-        # we immediately proceed to load
-        # all the required chromosomes.
-        if not lazy_load:
-            self.load()
-
-    def is_cached(self) -> bool:
-        """Return boolean representing if a cache directory already exists for current genome."""
-        return os.path.exists(self._cache_directory)
+        self.load()
 
     def _genome_informations_path(self) -> str:
         """Return path for the JSON file with current genome informations."""
@@ -311,14 +178,13 @@ class Genome:
             with open(self._genome_informations_path(), "r") as f:
                 return json.load(f)
         except Exception:
-            if self._warning:
-                warnings.warn(
-                    "Failed to load genome {genome} informations. "
-                    "I will try to download them again afterwards.".format(
-                        genome=self.assembly
-                    ),
-                    RuntimeWarning
-                )
+            warnings.warn(
+                "Failed to load genome {genome} informations. "
+                "I will try to download them again afterwards.".format(
+                    genome=self.assembly
+                ),
+                RuntimeWarning
+            )
         return None
 
     def _store_genome_informations(self):
@@ -346,14 +212,13 @@ class Genome:
             with open(self._chromosomes_path(), "r") as f:
                 return json.load(f)
         except Exception:
-            if self._warning:
-                warnings.warn(
-                    "Failed to load chromosomes for genome {genome}. "
-                    "I will try to download them again afterwards.".format(
-                        genome=self.assembly
-                    ),
-                    RuntimeWarning
-                )
+            warnings.warn(
+                "Failed to load chromosomes for genome {genome}. "
+                "I will try to download them again afterwards.".format(
+                    genome=self.assembly
+                ),
+                RuntimeWarning
+            )
         return None
 
     def _store_chromosomes(self):
@@ -392,35 +257,15 @@ class Genome:
                 with open(self._chromosome_path(chromosome), "r") as f:
                     return json.load(f)["dna"]
         except Exception:
-            if self._warning:
-                warnings.warn(
-                    "Failed to load chromosome {chromosome} for genome {genome}. "
-                    "I will try to download them again afterwards.".format(
-                        chromosome=chromosome,
-                        genome=self.assembly
-                    ),
-                    RuntimeWarning
-                )
+            warnings.warn(
+                "Failed to load chromosome {chromosome} for genome {genome}. "
+                "I will try to download them again afterwards.".format(
+                    chromosome=chromosome,
+                    genome=self.assembly
+                ),
+                RuntimeWarning
+            )
         return None
-
-    def download(self):
-        """Download all the genome's chromosomes."""
-        chromosomes = [
-            chromosome
-            for chromosome in self
-            if not self.is_chromosome_cached(chromosome)
-        ]
-        for chromosome in tqdm(
-            chromosomes,
-            desc="Downloading chromosomes for genome {assembly}".format(
-                assembly=self.assembly
-            ),
-            total=len(chromosomes),
-            disable=not self._verbose,
-            dynamic_ncols=True,
-            leave=self._leave_loading_bars
-        ):
-            self._download_chromosome(chromosome)
 
     def delete(self):
         """Remove the genome cache."""
@@ -445,11 +290,10 @@ class Genome:
             0,
             self._chromosomes_lenghts[chromosome]
         )
-        if self._enable_cache:
-            path = self._chromosome_path(chromosome)
-            os.makedirs(os.path.dirname(path), exist_ok=True)
-            with open(path, "w") as f:
-                json.dump(chromosome_data, f)
+        path = self._chromosome_path(chromosome)
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        with open(path, "w") as f:
+            json.dump(chromosome_data, f)
         return chromosome_data["dna"]
 
     def load(self):
@@ -462,7 +306,7 @@ class Genome:
             total=len(self),
             disable=not self._verbose,
             dynamic_ncols=True,
-            leave=self._leave_loading_bars
+            leave=False
         ):
             self.__getitem__(chromosome)
 
@@ -496,7 +340,7 @@ class Genome:
         -------
         String containing sequence data for given chromosome.
         """
-        if self._chromosomes[chromosome] is None and self._enable_cache:
+        if self._chromosomes[chromosome] is None:
             self._chromosomes[chromosome] = self._load_chromosome(
                 chromosome
             )
@@ -577,7 +421,7 @@ class Genome:
                 desc="Rendering gaps in {assembly}".format(
                     assembly=self.assembly
                 ),
-                leave=self._leave_loading_bars,
+                leave=False,
                 disable=not self._verbose
             )))
             p.close()
@@ -670,7 +514,7 @@ class Genome:
                     assembly=self.assembly
                 ),
                 disable=not self._verbose,
-                leave=self._leave_loading_bars
+                leave=False
             )))
             p.close()
             p.join()

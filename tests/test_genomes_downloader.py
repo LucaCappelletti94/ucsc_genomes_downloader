@@ -3,36 +3,36 @@ import pytest
 from glob import glob
 import os
 
+sacCer3_chromosomes = ["chrI"]
+
 
 def test_create_new_genome_object():
     sacCer3 = Genome(
         "sacCer3",
-        clear_cache=True,
-        lazy_download=False,
-        lazy_load=False
+        chromosomes=sacCer3_chromosomes,
     )
-    assert sacCer3.is_cached()
     for path in glob("{path}/*.json".format(
         path=sacCer3.path
     )):
         os.remove(path)
-    sacCer3 = Genome("sacCer3")
-    sacCer3 = Genome("sacCer3")
+    sacCer3 = Genome("sacCer3", chromosomes=sacCer3_chromosomes)
+    sacCer3 = Genome("sacCer3", chromosomes=sacCer3_chromosomes)
     sacCer3.gaps()
     sacCer3.filled()
-    print(sacCer3)
+    str(sacCer3)
     sacCer3.delete()
 
 
 def test_simulated_download_failure():
-    for _ in Genome("sacCer3").items():
+    for _ in Genome("sacCer3", chromosomes=sacCer3_chromosomes).items():
         pass
-    sacCer3 = Genome("sacCer3")
-    path = sacCer3._chromosome_path("chrM")
+    sacCer3 = Genome("sacCer3", chromosomes=sacCer3_chromosomes)
+    path = sacCer3._chromosome_path("chrI")
     with open(path, "w") as f:
         f.write("Totally not JSON")
-    _ = sacCer3["chrM"]
-    assert "chrM" in sacCer3
+    sacCer3 = Genome("sacCer3", chromosomes=sacCer3_chromosomes)
+    assert "chrI" in sacCer3
+    sacCer3.delete()
 
 
 def test_get_available_genomes():
@@ -40,8 +40,8 @@ def test_get_available_genomes():
 
 
 def test_gaps():
-    hg19 = Genome("hg19")
-    filled = hg19.filled(chromosomes=["chr1", "chrM"])
+    hg19 = Genome("hg19", chromosomes=["chr1"])
+    filled = hg19.filled(chromosomes=["chr1"])
     hg19.bed_to_sequence(filled)
     hg19.delete()
 
@@ -53,4 +53,4 @@ def test_unavailable_genome():
 
 def test_empty_genome():
     with pytest.raises(ValueError):
-        Genome("eboVir3")
+        Genome("hg19", filters=("",))
