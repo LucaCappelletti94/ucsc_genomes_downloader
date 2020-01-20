@@ -58,7 +58,6 @@ class Genome:
 
         hg19.delete()
 
-
     """
 
     def __init__(
