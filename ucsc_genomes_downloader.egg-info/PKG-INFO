@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: ucsc-genomes-downloader
-Version: 1.1.2
+Version: 1.1.4
 Summary: Python package to quickly download genomes from the UCSC.
 Home-page: https://github.com/LucaCappelletti94/ucsc_genomes_downloader
 Author: Luca Cappelletti
@@ -49,15 +49,22 @@ Description: ucsc_genomes_downloader
         
         Getting gaps regions
         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        The method return a DataFrame in bed-like format
+        that contains the regions where only n or N nucleotides
+        are present.
         
         .. code:: python
         
-            all_gaps = hg19.gaps() # Returns gaps for all chromosomes
+            all_gaps = hg19.gaps() # Returns gaps (region formed of Ns) for all chromosomes
             # Returns gaps for chromosome chrM
             chrM_gaps = hg19.gaps(chromosomes=["chrM"])
         
         Getting filled regions
         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        The method return a DataFrame in bed-like format
+        that contains the regions where no unknown
+        nucleotide is present, basically the complementary
+        of the gaps method.
         
         .. code:: python
         
@@ -84,6 +91,25 @@ Description: ucsc_genomes_downloader
         
             from ucsc_genomes_downloader import get_available_genomes
             all_genomes = get_available_genomes()
+        
+        
+        Tasselizing bed files
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        Create a tasselization of a given size of a given bed-like pandas dataframe.
+        
+        Available alignment are to the left, right or center.
+        
+        .. code:: python
+        
+            from ucsc_genomes_downloader.utils import tasselize_bed
+            import pandas as pd
+        
+            my_bed = pd.read_csv("path/to/my/file.bed", sep="\t")
+            tasselized = tasselize_bed(
+                my_bed,
+                window_size=200,
+                alignment="left"
+            )
         
         .. _hg19: https://www.ncbi.nlm.nih.gov/assembly/GCF_000001405.13/
         
@@ -115,7 +141,7 @@ Description: ucsc_genomes_downloader
             :target: https://pepy.tech/badge/ucsc-genomes-downloader
             :alt: Pypi total project downloads
         
-        .. |codacy|  image:: https://api.codacy.com/project/badge/Grade/79564bf70059458b8a9ee6e775f4c7d2
+        .. |codacy| image:: https://api.codacy.com/project/badge/Grade/79564bf70059458b8a9ee6e775f4c7d2
             :target: https://www.codacy.com/app/LucaCappelletti94/ucsc_genomes_downloader?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=LucaCappelletti94/ucsc_genomes_downloader&amp;utm_campaign=Badge_Grade
             :alt: Codacy Maintainability
         
