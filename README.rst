@@ -41,15 +41,22 @@ Downloading selected chromosomes
 
 Getting gaps regions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+The method return a DataFrame in bed-like format
+that contains the regions where only n or N nucleotides
+are present.
 
 .. code:: python
 
-    all_gaps = hg19.gaps() # Returns gaps for all chromosomes
+    all_gaps = hg19.gaps() # Returns gaps (region formed of Ns) for all chromosomes
     # Returns gaps for chromosome chrM
     chrM_gaps = hg19.gaps(chromosomes=["chrM"])
 
 Getting filled regions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+The method return a DataFrame in bed-like format
+that contains the regions where no unknown
+nucleotide is present, basically the complementary
+of the gaps method.
 
 .. code:: python
 
