@@ -77,6 +77,24 @@ from the UCSC website with the following method:
     from ucsc_genomes_downloader import get_available_genomes
     all_genomes = get_available_genomes()
 
+
+Tasselizing bed files
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Create a tasselization of a given size of a given bed-like pandas dataframe.
+
+Available alignment are to the left, right or center.
+
+.. code:: python
+
+    from ucsc_genomes_downloader.utils import tasselize_bed
+
+    my_bed = pd.read_csv("path/to/my/file.bed", sep="\t")
+    tasselized = tasselize_bed(
+        my_bed,
+        window_size=200,
+        alignment="left"
+    )
+
 .. _hg19: https://www.ncbi.nlm.nih.gov/assembly/GCF_000001405.13/
 
 .. |travis| image:: https://travis-ci.org/LucaCappelletti94/ucsc_genomes_downloader.png
@@ -107,7 +125,7 @@ from the UCSC website with the following method:
     :target: https://pepy.tech/badge/ucsc-genomes-downloader
     :alt: Pypi total project downloads
 
-.. |codacy|  image:: https://api.codacy.com/project/badge/Grade/79564bf70059458b8a9ee6e775f4c7d2
+.. |codacy| image:: https://api.codacy.com/project/badge/Grade/79564bf70059458b8a9ee6e775f4c7d2
     :target: https://www.codacy.com/app/LucaCappelletti94/ucsc_genomes_downloader?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=LucaCappelletti94/ucsc_genomes_downloader&amp;utm_campaign=Badge_Grade
     :alt: Codacy Maintainability
 
