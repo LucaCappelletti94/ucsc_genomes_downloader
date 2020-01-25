@@ -94,6 +94,7 @@ Available alignment are to the left, right or center.
 .. code:: python
 
     from ucsc_genomes_downloader.utils import tasselize_bed
+    import pandas as pd
 
     my_bed = pd.read_csv("path/to/my/file.bed", sep="\t")
     tasselized = tasselize_bed(
