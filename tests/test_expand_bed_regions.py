@@ -1,6 +1,5 @@
 from ucsc_genomes_downloader import Genome
 from ucsc_genomes_downloader.utils import expand_bed_regions
-from collections import Counter
 import pytest
 
 
