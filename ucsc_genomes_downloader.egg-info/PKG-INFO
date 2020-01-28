@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: ucsc-genomes-downloader
-Version: 1.1.4
+Version: 1.1.5
 Summary: Python package to quickly download genomes from the UCSC.
 Home-page: https://github.com/LucaCappelletti94/ucsc_genomes_downloader
 Author: Luca Cappelletti
@@ -89,7 +89,7 @@ Description: ucsc_genomes_downloader
         
         .. code:: python
         
-            from ucsc_genomes_downloader import get_available_genomes
+            from ucsc_genomes_downloader.utils import get_available_genomes
             all_genomes = get_available_genomes()
         
         
@@ -108,6 +108,24 @@ Description: ucsc_genomes_downloader
             tasselized = tasselize_bed(
                 my_bed,
                 window_size=200,
+                alignment="left"
+            )
+        
+        Expand bed files regions
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        Expand a given dataframe in bed-like format using selected alignment.
+        
+        Available alignment are to the left, right or center.
+        
+        .. code:: python
+        
+            from ucsc_genomes_downloader.utils import expand_bed_regions
+            import pandas as pd
+        
+            my_bed = pd.read_csv("path/to/my/file.bed", sep="\t")
+            expanded = expand_bed_regions(
+                my_bed,
+                window_size=1000,
                 alignment="left"
             )
         

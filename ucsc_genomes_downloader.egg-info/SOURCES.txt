@@ -10,6 +10,7 @@ ucsc_genomes_downloader.egg-info/dependency_links.txt
 ucsc_genomes_downloader.egg-info/requires.txt
 ucsc_genomes_downloader.egg-info/top_level.txt
 ucsc_genomes_downloader/utils/__init__.py
+ucsc_genomes_downloader/utils/expand_bed_regions.py
 ucsc_genomes_downloader/utils/extract_sequences.py
 ucsc_genomes_downloader/utils/gaps.py
 ucsc_genomes_downloader/utils/tasselize_bed.py
