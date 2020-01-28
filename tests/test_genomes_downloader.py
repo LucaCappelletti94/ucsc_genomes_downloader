@@ -1,4 +1,5 @@
-from ucsc_genomes_downloader import Genome, get_available_genomes
+from ucsc_genomes_downloader import Genome
+from ucsc_genomes_downloader.utils import get_available_genomes
 import pytest
 from glob import glob
 import os

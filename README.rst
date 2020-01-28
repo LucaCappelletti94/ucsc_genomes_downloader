@@ -81,7 +81,7 @@ from the UCSC website with the following method:
 
 .. code:: python
 
-    from ucsc_genomes_downloader import get_available_genomes
+    from ucsc_genomes_downloader.utils import get_available_genomes
     all_genomes = get_available_genomes()
 
 
