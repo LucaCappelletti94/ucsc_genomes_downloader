@@ -103,6 +103,24 @@ Available alignment are to the left, right or center.
         alignment="left"
     )
 
+Expand bed files regions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Expand a given dataframe in bed-like format using selected alignment.
+
+Available alignment are to the left, right or center.
+
+.. code:: python
+
+    from ucsc_genomes_downloader.utils import expand_bed_regions
+    import pandas as pd
+
+    my_bed = pd.read_csv("path/to/my/file.bed", sep="\t")
+    expanded = expand_bed_regions(
+        my_bed,
+        window_size=1000,
+        alignment="left"
+    )
+
 .. _hg19: https://www.ncbi.nlm.nih.gov/assembly/GCF_000001405.13/
 
 .. |travis| image:: https://travis-ci.org/LucaCappelletti94/ucsc_genomes_downloader.png
