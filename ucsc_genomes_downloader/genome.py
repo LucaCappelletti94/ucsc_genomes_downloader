@@ -156,7 +156,7 @@ class Genome:
                     assembly=self.assembly)
             )
 
-        self.load()
+        self._load()
 
     def _genome_informations_path(self) -> str:
         """Return path for the JSON file with current genome informations."""
@@ -295,7 +295,7 @@ class Genome:
             json.dump(chromosome_data, f)
         return chromosome_data["dna"]
 
-    def load(self):
+    def _load(self):
         """Load into memory all the genome's chromosomes, downloading them when necessary."""
         for chromosome in tqdm(
             self,
