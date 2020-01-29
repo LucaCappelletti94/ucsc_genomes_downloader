@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: ucsc-genomes-downloader
-Version: 1.1.5
+Version: 1.1.6
 Summary: Python package to quickly download genomes from the UCSC.
 Home-page: https://github.com/LucaCappelletti94/ucsc_genomes_downloader
 Author: Luca Cappelletti
@@ -33,14 +33,18 @@ Description: ucsc_genomes_downloader
         
         Simply instanziate a new genome
         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        To download and load into memory the chromosomes of a given genomic assembly
+        you can use the following code snippet:
         
         .. code:: python
         
             from ucsc_genomes_downloader import Genome
-            hg19 = Genome("hg19")
+            hg19 = Genome(assembly="hg19")
         
         Downloading selected chromosomes
         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        If you want to select a subset of chromosomes to be downloaded
+        you can use the attribute "chromosomes":
         
         .. code:: python
         
@@ -74,10 +78,56 @@ Description: ucsc_genomes_downloader
         
         Removing genome's cache
         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        To delete the cache of genome, including chromosomes
+        and metadata you can use the delete method:
         
         .. code:: python
         
             hg19.delete()
+        
+        Genome objects representation
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        When printed, a Genome object has a human-readable representation.
+        This allows you to print lists of Genome objects as follows:
+        
+        .. code:: python
+        
+            print([
+                hg19,
+                hg38,
+                mm10
+            ]})
+        
+            # >>> [
+            #    Human, Homo sapiens, hg19, 2009-02-28, 25 chromosomes,
+            #    Human, Homo sapiens, hg38, 2013-12-29, 25 chromosomes,
+            #    Mouse, Mus musculus, mm10, 2011-12-29, 22 chromosomes
+            # ]
+        
+        Obtaining a given bed file sequences
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        Given a pandas DataFrame in bed-like format, you can obtain
+        the curresponding genomic sequences for the loaded assembly
+        using the bed_to_sequence method:
+        
+        .. code:: python
+        
+            my_bed = pd.read_csv("path/to/my/file.bed", sep="\t")
+            sequences = hg19.bed_to_sequence(my_bed)
+        
+        Properties
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        A Genome object has the following properties:
+        
+        .. code:: python
+        
+            hg19.assembly # Returns "hg19"
+            hg19.date # Returns "2009-02-28" as datetime object
+            hg19.organism # Returns "Human"
+            hg19.scientific_name # Returns "Homo sapiens"
+            hg19.description # Returns the brief description as provided from UCSC
+            hg19.path # Returns path where genome is cached
+        
         
         Utilities
         -------------------------------
