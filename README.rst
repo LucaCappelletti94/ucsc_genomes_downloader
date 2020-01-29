@@ -88,7 +88,7 @@ This allows you to print lists of Genome objects as follows:
         hg19,
         hg38,
         mm10
-    ]})
+    ])
 
     # >>> [
     #    Human, Homo sapiens, hg19, 2009-02-28, 25 chromosomes,
