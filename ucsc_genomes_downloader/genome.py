@@ -419,6 +419,7 @@ class Genome:
                     assembly=self.assembly
                 ),
                 leave=False,
+                dynamic_ncols=True,
                 disable=not self._verbose
             )))
             p.close()
@@ -510,6 +511,7 @@ class Genome:
                 desc="Rendering sequences in {assembly}".format(
                     assembly=self.assembly
                 ),
+                dynamic_ncols=True,
                 disable=not self._verbose,
                 leave=False
             )))

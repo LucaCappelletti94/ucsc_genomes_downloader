@@ -132,6 +132,9 @@ def tasselize_bed(bed: pd.DataFrame, window_size: int, alignment: str = "left", 
         df = pd.concat(tqdm(
             p.imap(_aligned_tasselize_bed, tasks),
             total=len(bed),
+            disable=not verbose,
+            leave=False,
+            dynamic_ncols=True,
             desc="Tasselizing windows"
         ))
         p.close()
