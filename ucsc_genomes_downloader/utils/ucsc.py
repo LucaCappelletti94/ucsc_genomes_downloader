@@ -1,4 +1,7 @@
+from typing import Dict
 from requests import get
+import os
+import json
 
 
 def get_endpoint(endpoint: str) -> str:
@@ -34,5 +37,35 @@ def chromosome_url(genome: str, chromosome: str, start: int, end: int) -> str:
     )
 
 
-def get_chromosome(genome: str, chromosome: str, start: int, end: int):
-    return ucsc(chromosome_url(genome, chromosome, start, end))
+def get_chromosome(assembly: str, chromosome: str, start: int, end: int):
+    return ucsc(chromosome_url(assembly, chromosome, start, end))
+
+
+def download_chromosome(assembly: str, chromosome: str, start: int, end: int, path: str):
+    """Download and return the nucleotides sequence for the given chromosome.
+
+    Parameters
+    ----------
+    assembly: strm
+        The genomic assembly to target.
+    chromosome: str,
+        The chromosome identifier, such as chr1, chrX, chrM...
+    start: int,
+        Where to start downloading the chromosome.
+    end: int,
+        Where to stop downloading the chromosome.
+    path: str,
+        Where to write the chromosome.
+
+    Returns
+    -------
+    The nucleotide sequence for the given chromosomes.
+    """
+    chromosome_data = get_chromosome(assembly, chromosome, start, end)
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w") as f:
+        json.dump(chromosome_data, f)
+
+
+def download_chromosome_wrapper(task: Dict):
+    return download_chromosome(**task)

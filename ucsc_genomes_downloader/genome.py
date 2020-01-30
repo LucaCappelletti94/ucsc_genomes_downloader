@@ -15,7 +15,7 @@ from datetime import datetime
 from tqdm.auto import tqdm
 from multiprocessing import Pool, cpu_count
 from typing import Dict, Generator, List, Tuple
-from .utils import get_available_genomes, get_available_chromosomes, get_chromosome, get_genome_informations
+from .utils import get_available_genomes, get_available_chromosomes, download_chromosome_wrapper, get_genome_informations
 from .utils import multiprocessing_gaps, multiprocessing_extract_sequences
 
 
@@ -156,6 +156,7 @@ class Genome:
                     assembly=self.assembly)
             )
 
+        self._download()
         self._load()
 
     def _genome_informations_path(self) -> str:
@@ -251,19 +252,15 @@ class Genome:
         RuntimeWarning:
             If given chromosome are not available locally.
         """
+        path = self._chromosome_path(chromosome)
         try:
-            if self.is_chromosome_cached(chromosome):
-                with open(self._chromosome_path(chromosome), "r") as f:
-                    return json.load(f)["dna"]
-        except Exception:
-            warnings.warn(
-                "Failed to load chromosome {chromosome} for genome {genome}. "
-                "I will try to download them again afterwards.".format(
-                    chromosome=chromosome,
-                    genome=self.assembly
-                ),
-                RuntimeWarning
-            )
+            with open(path, "r") as f:
+                return json.load(f)["dna"]
+        except json.decoder.JSONDecodeError:
+            os.remove(path)
+            raise Exception(
+                "Chromosome at path {path} is corrupt and has been deleted.".format(path=path))
+
         return None
 
     def delete(self):
@@ -271,29 +268,36 @@ class Genome:
         if os.path.exists(self._cache_directory):
             shutil.rmtree(self._cache_directory)
 
-    def _download_chromosome(self, chromosome: str) -> str:
-        """Download and return the nucleotides sequence for the given chromosome.
-
-        Parameters
-        ----------
-        chromosome: str,
-            The chromosome identifier, such as chr1, chrX, chrM...
-
-        Returns
-        -------
-        The nucleotide sequence for the given chromosomes.
-        """
-        chromosome_data = get_chromosome(
-            self.assembly,
-            chromosome,
-            0,
-            self._chromosomes_lenghts[chromosome]
-        )
-        path = self._chromosome_path(chromosome)
-        os.makedirs(os.path.dirname(path), exist_ok=True)
-        with open(path, "w") as f:
-            json.dump(chromosome_data, f)
-        return chromosome_data["dna"]
+    def _download(self):
+        """Download the missing chromosomes."""
+        tasks = [
+            {
+                "assembly": self.assembly,
+                "chromosome": chromosome,
+                "start": 0,
+                "end": self._chromosomes_lenghts[chromosome],
+                "path": self._chromosome_path(chromosome)
+            }
+            for chromosome in self
+            if not self.is_chromosome_cached(chromosome)
+        ]
+        if len(tasks):
+            with Pool(min(cpu_count(), len(tasks))) as p:
+                list(tqdm(
+                    p.imap(
+                        download_chromosome_wrapper,
+                        tasks
+                    ),
+                    desc="Downloading chromosomes for genome {assembly}".format(
+                        assembly=self.assembly
+                    ),
+                    total=len(tasks),
+                    disable=not self._verbose,
+                    dynamic_ncols=True,
+                    leave=False
+                ))
+                p.close()
+                p.join()
 
     def _load(self):
         """Load into memory all the genome's chromosomes, downloading them when necessary."""
@@ -307,7 +311,9 @@ class Genome:
             dynamic_ncols=True,
             leave=False
         ):
-            self.__getitem__(chromosome)
+            self._chromosomes[chromosome] = self._load_chromosome(
+                chromosome
+            )
 
     def __len__(self) -> int:
         """Return the number of chromosomes in current genome."""
@@ -339,14 +345,6 @@ class Genome:
         -------
         String containing sequence data for given chromosome.
         """
-        if self._chromosomes[chromosome] is None:
-            self._chromosomes[chromosome] = self._load_chromosome(
-                chromosome
-            )
-        if self._chromosomes[chromosome] is None:
-            self._chromosomes[chromosome] = self._download_chromosome(
-                chromosome
-            )
         return self._chromosomes[chromosome]
 
     def items(self) -> Generator:

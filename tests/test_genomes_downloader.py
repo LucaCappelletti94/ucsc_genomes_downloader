@@ -31,8 +31,8 @@ def test_simulated_download_failure():
     path = sacCer3._chromosome_path("chrI")
     with open(path, "w") as f:
         f.write("Totally not JSON")
-    sacCer3 = Genome("sacCer3", chromosomes=sacCer3_chromosomes)
-    assert "chrI" in sacCer3
+    with pytest.raises(Exception):
+        sacCer3 = Genome("sacCer3", chromosomes=sacCer3_chromosomes)
     sacCer3.delete()
 
 
