@@ -261,8 +261,6 @@ class Genome:
             raise Exception(
                 "Chromosome at path {path} is corrupt and has been deleted.".format(path=path))
 
-        return None
-
     def delete(self):
         """Remove the genome cache."""
         if os.path.exists(self._cache_directory):
