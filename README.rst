@@ -15,7 +15,7 @@ As usual, just download it using pip:
 
 Tests Coverage
 ----------------------------------------------
-Since some software handling coverages sometime get
+Since some software handling coverages sometimes get
 slightly different results, here's three of them:
 
 |coveralls| |sonar_coverage| |code_climate_coverage|
@@ -23,7 +23,7 @@ slightly different results, here's three of them:
 Usage examples
 --------------
 
-Simply instanziate a new genome
+Simply instantiate a new genome
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 To download and load into memory the chromosomes of a given genomic assembly
 you can use the following code snippet:
@@ -45,7 +45,7 @@ you can use the attribute "chromosomes":
 
 Getting gaps regions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-The method return a DataFrame in bed-like format
+The method returns a DataFrame in bed-like format
 that contains the regions where only n or N nucleotides
 are present.
 
@@ -57,9 +57,9 @@ are present.
 
 Getting filled regions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-The method return a DataFrame in bed-like format
-that contains the regions where no unknown
-nucleotide is present, basically the complementary
+The method returns a DataFrame in bed-like format
+that contains the regions where no unknown nucleotides
+are present, basically the complementary
 of the gaps method.
 
 .. code:: python
@@ -70,7 +70,7 @@ of the gaps method.
 
 Removing genome's cache
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-To delete the cache of genome, including chromosomes
+To delete the cache of the genome, including chromosomes
 and metadata you can use the delete method:
 
 .. code:: python
@@ -99,7 +99,7 @@ This allows you to print lists of Genome objects as follows:
 Obtaining a given bed file sequences
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Given a pandas DataFrame in bed-like format, you can obtain
-the curresponding genomic sequences for the loaded assembly
+the corresponding genomic sequences for the loaded assembly
 using the bed_to_sequence method:
 
 .. code:: python
@@ -139,7 +139,7 @@ Tasselizing bed files
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Create a tasselization of a given size of a given bed-like pandas dataframe.
 
-Available alignment are to the left, right or center.
+Available alignments are to the left, right or center.
 
 .. code:: python
 
@@ -157,7 +157,7 @@ Expand bed files regions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Expand a given dataframe in bed-like format using selected alignment.
 
-Available alignment are to the left, right or center.
+Available alignments are to the left, right or center.
 
 .. code:: python
 
@@ -169,6 +169,24 @@ Available alignment are to the left, right or center.
         my_bed,
         window_size=1000,
         alignment="left"
+    )
+
+Wiggle bed files regions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Generate new bed regions based on a given bed file by wiggling the
+initial regions.
+
+.. code:: python
+
+    from ucsc_genomes_downloader.utils import wiggle_bed_regions
+    import pandas as pd
+
+    my_bed = pd.read_csv("path/to/my/file.bed", sep="\t")
+    expanded = wiggle_bed_regions(
+        my_bed,
+        max_wiggle_size=100, # Maximum amount to wiggle region
+        wiggles=10, # Number of wiggled samples to introduce
+        seed=42 # Random seed for reproducibility
     )
 
 .. _hg19: https://www.ncbi.nlm.nih.gov/assembly/GCF_000001405.13/

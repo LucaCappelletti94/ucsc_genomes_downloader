@@ -3,6 +3,7 @@ from .gaps import multiprocessing_gaps
 from .extract_sequences import multiprocessing_extract_sequences
 from .tasselize_bed import tasselize_bed
 from .expand_bed_regions import expand_bed_regions
+from .wiggle_bed_regions import wiggle_bed_regions
 
 __all__ = [
     "get_available_genomes",
@@ -13,5 +14,6 @@ __all__ = [
     "multiprocessing_gaps",
     "multiprocessing_extract_sequences",
     "tasselize_bed",
-    "expand_bed_regions"
+    "expand_bed_regions",
+    "wiggle_bed_regions"
 ]
