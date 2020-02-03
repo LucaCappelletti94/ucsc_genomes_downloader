@@ -7,6 +7,7 @@
 
 import json
 import os
+import math
 import shutil
 import dateparser
 import pandas as pd
@@ -490,22 +491,23 @@ class Genome:
         ]))
         return pd.concat(non_gap).sort_values(["chrom"]).reset_index(drop=True)
 
-    def bed_to_sequence(self, bed: pd.DataFrame):
-        unique_chromosomes = len(bed.chrom.unique())
-        tasks = (
+    def bed_to_sequence(self, bed: pd.DataFrame, chunksize: int = 1000):
+        """Return bed with an additional column containing the sequences."""
+        tasks = [
             {
-                "bed": group,
+                "bed": group[chunksize*i:chunksize*(i+1)],
                 "sequence": self[chrom]
             }
             for chrom, group in bed.groupby("chrom")
-        )
-        with Pool(min(unique_chromosomes, cpu_count())) as p:
+            for i in range(math.ceil(len(group)/chunksize))
+        ]
+        with Pool(min(len(tasks), cpu_count())) as p:
             sequences = pd.concat(list(tqdm(
                 p.imap(
                     multiprocessing_extract_sequences,
                     tasks
                 ),
-                total=unique_chromosomes,
+                total=len(tasks),
                 desc="Rendering sequences in {assembly}".format(
                     assembly=self.assembly
                 ),
