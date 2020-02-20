@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 __all__ = ["expand_bed_regions"]
 
@@ -36,7 +37,7 @@ def expand_bed_regions(bed: pd.DataFrame, window_size: int, alignment: str = "ce
 
     Returns
     -----------------------
-    Returns a pandas DataFrame in bed-like format containing the tasselized windows.
+    Returns a pandas DataFrame in bed-like format containing the tessellated windows.
     """
     if not isinstance(window_size, int) or window_size < 1:
         raise ValueError("Window size must be a positive integer.")
@@ -47,8 +48,8 @@ def expand_bed_regions(bed: pd.DataFrame, window_size: int, alignment: str = "ce
         bed.chromStart = bed.chromEnd - window_size
     elif alignment == "center":
         mid_point = (bed.chromEnd + bed.chromStart)//2
-        bed.chromStart = mid_point - window_size//2
-        bed.chromEnd = mid_point + window_size//2
+        bed.chromStart = (mid_point - np.floor(window_size/2)).astype(int)
+        bed.chromEnd = (mid_point + np.ceil(window_size/2)).astype(int)
     else:
         raise ValueError((
             "Invalid alignment parameter {alignment}. "

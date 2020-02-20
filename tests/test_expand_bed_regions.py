@@ -7,9 +7,16 @@ def test_expand_bed_regions():
     hg19 = Genome("hg19", chromosomes=["chr2", "chr3"])
     gaps = hg19.gaps(chromosomes=["chr2", "chr3"])
     mask = gaps.chromEnd - gaps.chromStart < 500
-    expand_bed_regions(gaps[mask], 1000, "left")
-    expand_bed_regions(gaps[mask], 1000, "right")
-    expand_bed_regions(gaps[mask], 1000, "center")
+    result = expand_bed_regions(gaps[mask], 200, "left")
+    assert (result.chromEnd - result.chromStart == 200).all()
+    result = expand_bed_regions(gaps[mask], 201, "right")
+    assert (result.chromEnd - result.chromStart == 201).all()
+    result = expand_bed_regions(gaps[mask], 200, "center")
+    assert (result.chromEnd - result.chromStart == 200).all()
+    result = expand_bed_regions(gaps[mask], 201, "center")
+    assert (result.chromEnd - result.chromStart == 201).all()
+    result = expand_bed_regions(gaps[mask], 173, "center")
+    assert (result.chromEnd - result.chromStart == 173).all()
     hg19.delete()
 
 

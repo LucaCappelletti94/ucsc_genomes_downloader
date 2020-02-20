@@ -135,19 +135,19 @@ from the UCSC website with the following method:
     all_genomes = get_available_genomes()
 
 
-Tasselizing bed files
+Tessellating bed files
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Create a tasselization of a given size of a given bed-like pandas dataframe.
+Create a tessellation of a given size of a given bed-like pandas dataframe.
 
 Available alignments are to the left, right or center.
 
 .. code:: python
 
-    from ucsc_genomes_downloader.utils import tasselize_bed
+    from ucsc_genomes_downloader.utils import tessellate_bed
     import pandas as pd
 
     my_bed = pd.read_csv("path/to/my/file.bed", sep="\t")
-    tasselized = tasselize_bed(
+    tessellated = tessellate_bed(
         my_bed,
         window_size=200,
         alignment="left"

@@ -5,7 +5,7 @@ import pytest
 import pandas as pd
 
 
-def test_tasselize():
+def test_wiggle():
     hg19 = Genome("hg19", chromosomes=["chr17"])
     filled = hg19.filled(chromosomes=["chr17"])
     wiggles = wiggle_bed_regions(
@@ -27,7 +27,7 @@ def test_tasselize():
     hg19.delete()
 
 
-def test_tasselize_wrong_parameters():
+def test_wiggle_wrong_parameters():
     with pytest.raises(ValueError):
         wiggle_bed_regions(None, -1, 2, 2)
     with pytest.raises(ValueError):
