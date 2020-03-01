@@ -491,7 +491,7 @@ class Genome:
         ]))
         return pd.concat(non_gap).sort_values(["chrom"]).reset_index(drop=True)
 
-    def bed_to_sequence(self, bed: pd.DataFrame, chunksize: int = 10000):
+    def bed_to_sequence(self, bed: pd.DataFrame, chunksize: int = 50000):
         """Return bed with an additional column containing the sequences."""
         tasks = [
             {
