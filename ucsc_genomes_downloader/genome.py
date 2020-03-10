@@ -420,7 +420,7 @@ class Genome:
                 leave=False,
                 dynamic_ncols=True,
                 disable=not self._verbose
-            )))
+            ))).reset_index(drop=True)
             p.close()
             p.join()
         return gaps
