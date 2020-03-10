@@ -24,7 +24,7 @@ after_script:
 script:
 - rm -rf .coverage
 - coverage erase
-- pytest -s --cov=ucsc_genomes_downloader --cov-report xml:coverage.xml
+- pytest --cov=ucsc_genomes_downloader --cov-report xml:coverage.xml
 - coverage combine --append || true
 - coverage report
 - coverage xml
