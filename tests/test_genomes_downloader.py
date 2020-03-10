@@ -16,7 +16,8 @@ def test_create_new_genome_object():
         path=sacCer3.path
     )):
         os.remove(path)
-    sacCer3 = Genome("sacCer3", chromosomes=sacCer3_chromosomes)
+    with pytest.warns(RuntimeWarning):
+        sacCer3 = Genome("sacCer3", chromosomes=sacCer3_chromosomes)
     sacCer3 = Genome("sacCer3", chromosomes=sacCer3_chromosomes)
     sacCer3.gaps()
     sacCer3.filled()
