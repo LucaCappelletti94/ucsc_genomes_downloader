@@ -12,6 +12,18 @@ As usual, just download it using pip:
 .. code:: shell
 
     pip install ucsc_genomes_downloader
+    
+Getting COVID-19 Genome
+----------------------------------------------
+To download the covid-19 genome just run:
+
+.. code:: python
+
+    from ucsc_genomes_downloader import Genome
+    covid = Genome("wuhCor1")
+    
+    genome = covid["NC_045512v2"]
+
 
 Tests Coverage
 ----------------------------------------------
