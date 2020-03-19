@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: ucsc-genomes-downloader
-Version: 1.1.15
+Version: 1.1.16
 Summary: Python package to quickly download genomes from the UCSC.
 Home-page: https://github.com/LucaCappelletti94/ucsc_genomes_downloader
 Author: Luca Cappelletti
@@ -20,6 +20,18 @@ Description: ucsc_genomes_downloader
         .. code:: shell
         
             pip install ucsc_genomes_downloader
+            
+        Getting COVID-19 Genome
+        ----------------------------------------------
+        To download the covid-19 genome just run:
+        
+        .. code:: python
+        
+            from ucsc_genomes_downloader import Genome
+            covid = Genome("wuhCor1")
+            
+            genome = covid["NC_045512v2"]
+        
         
         Tests Coverage
         ----------------------------------------------
