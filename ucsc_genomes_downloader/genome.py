@@ -65,7 +65,7 @@ class Genome:
         self,
         assembly: str,
         chromosomes: Tuple[str] = None,
-        filters: Tuple[str] = ("chru", "scaffold", "contig", "super", "chrbin", "random", "hap", "alt", "fix"),
+        filters: Tuple[str] = ("chru", "chrMT", "scaffold", "contig", "super", "chrbin", "random", "hap", "alt", "fix"),
         verbose: bool = True,
         cache_directory: str = "genomes"
     ):
