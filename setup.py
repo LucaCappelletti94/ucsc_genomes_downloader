@@ -48,6 +48,7 @@ setup(
     # Choose your license
     license='MIT',
     include_package_data=True,
+    python_requires='>3.5.2',
     classifiers=[
         'Development Status :: 3 - Alpha',
         'License :: OSI Approved :: MIT License',

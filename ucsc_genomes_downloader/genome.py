@@ -11,13 +11,14 @@ import math
 import shutil
 import dateparser
 import pandas as pd
+import numpy as np
 import warnings
 from datetime import datetime
 from tqdm.auto import tqdm
 from multiprocessing import Pool, cpu_count
 from typing import Dict, Generator, List, Tuple
 from .utils import get_available_genomes, get_available_chromosomes, download_chromosome_wrapper, get_genome_informations
-from .utils import multiprocessing_gaps, multiprocessing_extract_sequences
+from .utils import multiprocessing_gaps
 
 
 class Genome:
@@ -491,33 +492,38 @@ class Genome:
         ]))
         return pd.concat(non_gap).sort_values(["chrom"]).reset_index(drop=True)
 
-    def bed_to_sequence(self, bed: pd.DataFrame, chunksize: int = 50000):
+    def extract_sequence(self, chrom: str, chromStart: int, chromEnd: int) -> str:
+        """Return genomic sequence for given coordinates.
+
+        Parameters
+        ------------------------------------
+        chrom: str,
+            Chromosome to use.
+        chromStart: int,
+            Position from where to start slicing.
+        chromEnd: int,
+            Position where to stop the slice.
+
+        Returns
+        -------------------------------------
+        Sequence of nucleotides.
+        """
+        return self[chrom][chromStart:chromEnd]
+
+    def bed_to_sequence(self, bed: pd.DataFrame)->np.ndarray:
         """Return bed with an additional column containing the sequences."""
-        tasks = [
-            {
-                "bed": group[chunksize*i:chunksize*(i+1)],
-                "sequence": self[chrom]
-            }
-            for chrom, group in bed.groupby("chrom")
-            for i in range(math.ceil(len(group)/chunksize))
-        ]
-        with Pool(min(len(tasks), cpu_count())) as p:
-            sequences = pd.concat(list(tqdm(
-                p.imap(
-                    multiprocessing_extract_sequences,
-                    tasks
-                ),
-                total=len(tasks),
-                desc="Rendering sequences in {assembly}".format(
-                    assembly=self.assembly
-                ),
-                dynamic_ncols=True,
-                disable=not self._verbose,
-                leave=False
-            )))
-            p.close()
-            p.join()
-        return sequences
+        return np.array([
+            self.extract_sequence(
+                row.chrom,
+                row.chromStart,
+                row.chromEnd
+            )
+            for _, row in tqdm(
+                bed.iterrows(),
+                total=len(bed),
+                desc="Extracting sequences from fasta"
+            )
+        ], dtype=str)
 
     @property
     def assembly(self) -> str:

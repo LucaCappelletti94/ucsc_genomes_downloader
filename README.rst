@@ -242,3 +242,6 @@ initial regions.
 .. |code_climate_coverage| image:: https://api.codeclimate.com/v1/badges/9cd5ed4d4e41892ccc9d/test_coverage
     :target: https://codeclimate.com/github/LucaCappelletti94/ucsc_genomes_downloader/test_coverage
     :alt: Code Climate Coverate
+
+.. |python_version| image:: https://img.shields.io/badge/python-3.x-blue
+    :alt: Supported Python Versions
