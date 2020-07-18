@@ -1,7 +1,7 @@
 ucsc_genomes_downloader
 =========================================================================================
 |travis| |sonar_quality| |sonar_maintainability| |codacy|
-|code_climate_maintainability| |pip| |downloads|
+|code_climate_maintainability| |python_version| |pip| |downloads|
 
 Python package to quickly download and work with genomes from the UCSC.
 
