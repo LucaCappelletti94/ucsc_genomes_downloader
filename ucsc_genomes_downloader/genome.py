@@ -459,7 +459,7 @@ class Genome:
             # and therefore considered filled.
             # We need to add this additional row.
             chromosome_lenght = self._chromosomes_lenghts[chrom]
-            if values.chromEnd.isin([chromosome_lenght]).any():
+            if not values.chromEnd.isin([chromosome_lenght]).any():
                 non_gap_values = non_gap_values.append({
                     "chrom": chrom,
                     "chromStart": values.chromEnd.max(),
@@ -471,7 +471,7 @@ class Genome:
             # it means that the initial part of the chromosome
             # is known and therefore considered filled.
             # We need to add this additional row.
-            if values.chromStart.isin([0]).any():
+            if not values.chromStart.isin([0]).any():
                 non_gap_values = non_gap_values.append({
                     "chrom": chrom,
                     "chromStart": 0,

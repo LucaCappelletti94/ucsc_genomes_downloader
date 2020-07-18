@@ -40,16 +40,6 @@ def test_simulated_download_failure():
 def test_get_available_genomes():
     get_available_genomes()
 
-
-def test_gaps():
-    hg19 = Genome("hg19", chromosomes=["chr1"])
-    assert "chr1" in hg19
-    assert "chr2" not in hg19
-    filled = hg19.filled(chromosomes=["chr1"])
-    hg19.bed_to_sequence(filled)
-    hg19.delete()
-
-
 def test_unavailable_genome():
     with pytest.raises(ValueError):
         Genome("hg1")
