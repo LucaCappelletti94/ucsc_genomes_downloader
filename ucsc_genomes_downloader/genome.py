@@ -510,9 +510,9 @@ class Genome:
         """
         return self[chrom][chromStart:chromEnd]
 
-    def bed_to_sequence(self, bed: pd.DataFrame)->np.ndarray:
+    def bed_to_sequence(self, bed: pd.DataFrame) -> List[str]:
         """Return bed with an additional column containing the sequences."""
-        return np.array([
+        return [
             self.extract_sequence(
                 row.chrom,
                 row.chromStart,
@@ -523,7 +523,7 @@ class Genome:
                 total=len(bed),
                 desc="Extracting sequences from fasta"
             )
-        ], dtype=str)
+        ]
 
     @property
     def assembly(self) -> str:

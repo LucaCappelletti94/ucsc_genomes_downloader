@@ -51,6 +51,6 @@ def wiggle_bed_regions(
     # Apply wiggles
     bed.chromStart += wiggles
     bed.chromEnd += wiggles
-    bed.iloc[bed.index[bed.chromStart < 0]].chromStart = 0
+    bed.loc[bed.index[bed.chromStart < 0], "chromStart"] = 0
     # Return the modified bed file
     return bed
