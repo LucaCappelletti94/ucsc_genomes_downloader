@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: ucsc-genomes-downloader
-Version: 1.1.18
+Version: 1.1.19
 Summary: Python package to quickly download genomes from the UCSC.
 Home-page: https://github.com/LucaCappelletti94/ucsc_genomes_downloader
 Author: Luca Cappelletti
@@ -251,8 +251,11 @@ Description: ucsc_genomes_downloader
             :target: https://codeclimate.com/github/LucaCappelletti94/ucsc_genomes_downloader/test_coverage
             :alt: Code Climate Coverate
         
+        .. |python_version| image:: https://img.shields.io/badge/python-3.x-blue
+            :alt: Supported Python Versions
 Platform: UNKNOWN
 Classifier: Development Status :: 3 - Alpha
 Classifier: License :: OSI Approved :: MIT License
 Classifier: Programming Language :: Python :: 3
+Requires-Python: >3.5.2
 Provides-Extra: test
