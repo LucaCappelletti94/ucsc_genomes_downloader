@@ -70,7 +70,9 @@ class Genome:
         "t": "c",
         "T": "C",
         "c": "t",
-        "C": "T"
+        "C": "T",
+        "N": "n",
+        "n": "N",
     }
 
     def __init__(
