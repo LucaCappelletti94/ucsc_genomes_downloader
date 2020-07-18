@@ -62,6 +62,17 @@ class Genome:
 
     """
 
+    NUCLEOTIDES_MAPPING = {
+        "a": "g",
+        "A": "G",
+        "g": "a",
+        "G": "A",
+        "t": "c",
+        "T": "C",
+        "c": "t",
+        "C": "T"
+    }
+
     def __init__(
         self,
         assembly: str,
@@ -492,7 +503,24 @@ class Genome:
         ]))
         return pd.concat(non_gap).sort_values(["chrom"]).reset_index(drop=True)
 
-    def extract_sequence(self, chrom: str, chromStart: int, chromEnd: int) -> str:
+    def reverse_complement(self, nucleotides: str) -> str:
+        """Return reverse complement of given nucletides.
+
+        Parameters
+        --------------------------
+        nucleotides: str,
+            Nucleotides whose reverse complement is to be computed.
+
+        Returns
+        --------------------------
+        Reverse complement of given nucleotides.
+        """
+        return "".join([
+            Genome.NUCLEOTIDES_MAPPING[nucleotide]
+            for nucleotide in nucleotides
+        ])
+
+    def extract_sequence(self, chrom: str, chromStart: int, chromEnd: int, strand: str = ".") -> str:
         """Return genomic sequence for given coordinates.
 
         Parameters
@@ -508,7 +536,10 @@ class Genome:
         -------------------------------------
         Sequence of nucleotides.
         """
-        return self[chrom][chromStart:chromEnd]
+        nucleotides = self[chrom][chromStart:chromEnd]
+        if strand == "-":
+            return self.reverse_complement(nucleotides)
+        return nucleotides
 
     def bed_to_sequence(self, bed: pd.DataFrame) -> List[str]:
         """Return bed with an additional column containing the sequences."""
@@ -516,7 +547,8 @@ class Genome:
             self.extract_sequence(
                 row.chrom,
                 row.chromStart,
-                row.chromEnd
+                row.chromEnd,
+                *(row.strand if "strand" in bed else ())
             )
             for _, row in tqdm(
                 bed.iterrows(),
