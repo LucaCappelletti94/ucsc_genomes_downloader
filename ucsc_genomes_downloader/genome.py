@@ -554,6 +554,7 @@ class Genome:
             )
             for _, row in tqdm(
                 bed.iterrows(),
+                disable=not self._verbose,
                 total=len(bed),
                 desc="Extracting sequences from fasta"
             )

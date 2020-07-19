@@ -1,2 +1,2 @@
 """Current version of package ucsc_genomes_downloader"""
-__version__ = "1.1.22"
+__version__ = "1.1.23"
