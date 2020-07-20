@@ -78,7 +78,8 @@ def extract_sequences(
     strands: List[str],
     mapping: Dict
 ) -> List[str]:
-    sequences = np.empty(len(chroms), dtype=str)
+    maximum_sequence = (chromEnds - chromStarts).max()
+    sequences = np.empty(len(chroms), dtype=f"<U{maximum_sequence}")
     _extract_sequences(
         sequences,
         chromosomes,
