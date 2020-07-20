@@ -58,6 +58,6 @@ setup(
     tests_require=test_deps,
     # Add here the package dependencies
     install_requires=["requests", "tqdm",
-                      "dateparser", "pandas"],
+                      "dateparser", "pandas", "numba"],
     extras_require=extras,
 )
