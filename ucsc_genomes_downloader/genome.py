@@ -12,6 +12,7 @@ import shutil
 import dateparser
 import pandas as pd
 import numpy as np
+from numba import typed, types, prange
 import warnings
 from datetime import datetime
 from tqdm.auto import tqdm
@@ -19,6 +20,7 @@ from multiprocessing import Pool, cpu_count
 from typing import Dict, Generator, List, Tuple
 from .utils import get_available_genomes, get_available_chromosomes, download_chromosome_wrapper, get_genome_informations
 from .utils import multiprocessing_gaps
+from .utils import extract_sequence, extract_sequences, reverse_complement
 
 
 class Genome:
@@ -61,19 +63,6 @@ class Genome:
         hg19.delete()
 
     """
-
-    NUCLEOTIDES_MAPPING = {
-        "a": "g",
-        "A": "G",
-        "g": "a",
-        "G": "A",
-        "t": "c",
-        "T": "C",
-        "c": "t",
-        "C": "T",
-        "N": "n",
-        "n": "N",
-    }
 
     def __init__(
         self,
@@ -153,12 +142,11 @@ class Genome:
             self._store_chromosomes()
 
         # Filtering chromosomes
-        self._chromosomes = {
-            chrom: None
-            for chrom in self._chromosomes_lenghts
-            if all(target not in chrom.lower() for target in filters) and chromosomes is None or
-            chromosomes is not None and chrom in chromosomes
-        }
+        self._chromosomes = typed.Dict.empty(
+            types.string, types.string)
+        for chrom in self._chromosomes_lenghts:
+            if all(target not in chrom.lower() for target in filters) and chromosomes is None or chromosomes is not None and chrom in chromosomes:
+                self._chromosomes[str(chrom)] = ""
 
         # If no chromosome remains after filtering,
         # for instance when the raw data are not yet mapped
@@ -170,6 +158,22 @@ class Genome:
                 "and checking for online availability".format(
                     assembly=self.assembly)
             )
+
+        self.NUCLEOTIDES_MAPPING = typed.Dict.empty(types.string, types.string)
+
+        for src, dst in {
+            "a": "g",
+            "A": "G",
+            "g": "a",
+            "G": "A",
+            "t": "c",
+            "T": "C",
+            "c": "t",
+            "C": "T",
+            "N": "n",
+            "n": "N",
+        }.items():
+            self.NUCLEOTIDES_MAPPING[src] = dst
 
         self._download()
         self._load()
@@ -505,23 +509,6 @@ class Genome:
         ]))
         return pd.concat(non_gap).sort_values(["chrom"]).reset_index(drop=True)
 
-    def reverse_complement(self, nucleotides: str) -> str:
-        """Return reverse complement of given nucletides.
-
-        Parameters
-        --------------------------
-        nucleotides: str,
-            Nucleotides whose reverse complement is to be computed.
-
-        Returns
-        --------------------------
-        Reverse complement of given nucleotides.
-        """
-        return "".join([
-            Genome.NUCLEOTIDES_MAPPING[nucleotide]
-            for nucleotide in nucleotides
-        ])
-
     def extract_sequence(self, chrom: str, chromStart: int, chromEnd: int, strand: str = ".") -> str:
         """Return genomic sequence for given coordinates.
 
@@ -538,27 +525,25 @@ class Genome:
         -------------------------------------
         Sequence of nucleotides.
         """
-        nucleotides = self[chrom][chromStart:chromEnd]
-        if strand == "-":
-            return self.reverse_complement(nucleotides)
-        return nucleotides
+        return extract_sequence(
+            self._chromosomes,
+            chrom,
+            chromStart,
+            chromEnd,
+            strand,
+            self.NUCLEOTIDES_MAPPING
+        )
 
     def bed_to_sequence(self, bed: pd.DataFrame) -> List[str]:
         """Return bed with an additional column containing the sequences."""
-        return [
-            self.extract_sequence(
-                row.chrom,
-                row.chromStart,
-                row.chromEnd,
-                *(row.strand if "strand" in bed else ())
-            )
-            for _, row in tqdm(
-                bed.iterrows(),
-                disable=not self._verbose,
-                total=len(bed),
-                desc="Extracting sequences from fasta"
-            )
-        ]
+        return extract_sequences(
+            self._chromosomes,
+            bed.chrom.values.astype(str),
+            bed.chromStart.values.astype(int),
+            bed.chromEnd.values.astype(int),
+            bed.strand.values.astype(str) if "strand" in bed.columns else None,
+            self.NUCLEOTIDES_MAPPING
+        )
 
     @property
     def assembly(self) -> str:
