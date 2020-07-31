@@ -2,6 +2,7 @@ from ucsc_genomes_downloader import Genome
 from ucsc_genomes_downloader.utils import tessellate_bed
 import pandas as pd
 
+
 def test_gaps():
     hg19 = Genome("hg19", chromosomes=["chr1"])
     assert "chr1" in hg19
@@ -18,6 +19,9 @@ def test_gaps():
     assert (filled.chromEnd - filled.chromStart != 0).all()
     filled_tesselate = tessellate_bed(filled, 200, verbose=False)
     filled_sequences = hg19.bed_to_sequence(filled_tesselate)
+    for fl in filled_sequences:
+        assert "n" not in fl.lower()
+    filled_sequences = hg19.bed_to_sequence(filled_tesselate.drop(columns="strand"))
     for fl in filled_sequences:
         assert "n" not in fl.lower()
     hg19.delete()

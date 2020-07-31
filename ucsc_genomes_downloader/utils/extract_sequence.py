@@ -65,7 +65,7 @@ def _extract_sequences(
             chroms[i],
             chromStarts[i],
             chromEnds[i],
-            strands[i] if strands is not None else ".",
+            str(strands[i]) if strands is not None else str("."),
             mapping
         )
 
