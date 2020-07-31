@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: ucsc-genomes-downloader
-Version: 1.1.24
+Version: 1.1.25
 Summary: Python package to quickly download genomes from the UCSC.
 Home-page: https://github.com/LucaCappelletti94/ucsc_genomes_downloader
 Author: Luca Cappelletti
