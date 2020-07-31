@@ -21,7 +21,8 @@ def test_gaps():
     filled_sequences = hg19.bed_to_sequence(filled_tesselate)
     for fl in filled_sequences:
         assert "n" not in fl.lower()
-    filled_sequences = hg19.bed_to_sequence(filled_tesselate.drop(columns="strand"))
+    filled_tesselate["strand"] = "."
+    filled_sequences = hg19.bed_to_sequence(filled_tesselate)
     for fl in filled_sequences:
         assert "n" not in fl.lower()
     hg19.delete()
