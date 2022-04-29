@@ -5,22 +5,23 @@
 # MIT license.
 """ Class to automatically retrieve informations and sequences for a Genome from the UCSC Genome Browser assembly database."""
 
-import json
 import os
-import math
+import json
 import shutil
+import compress_json
 import dateparser
 import pandas as pd
 import numpy as np
-from numba import typed, types, prange
+from numba import typed, types
 import warnings
 from datetime import datetime
+from userinput.utils import closest
 from tqdm.auto import tqdm
 from multiprocessing import Pool, cpu_count
 from typing import Dict, Generator, List, Tuple
 from .utils import get_available_genomes, get_available_chromosomes, download_chromosome_wrapper, get_genome_informations
 from .utils import multiprocessing_gaps
-from .utils import extract_sequence, extract_sequences, reverse_complement
+from .utils import extract_sequence, extract_sequences
 
 
 class Genome:
@@ -121,12 +122,21 @@ class Genome:
             self._genome_informations = self._load_genome_informations()
             self._chromosomes_lenghts = self._load_chromosomes()
         # Otherwise we check if the genome is available
-        elif self.assembly not in get_available_genomes():
-            # If the genome is not available we raise a proper exception
-            raise ValueError(
-                "Given genome {assembly} is not within the avalable genomes.".format(
-                    assembly=self.assembly
-                ))
+        else:
+            available_genomes = get_available_genomes()
+            if self.assembly not in available_genomes:
+                # If the genome is not available we raise a proper exception
+                raise ValueError(
+                    (
+                        "Given genome {assembly} is not within the available genomes. "
+                        "Did you mean to specify the {closest} genomic assembly?"
+                    ).format(
+                        assembly=self.assembly,
+                        closest=closest(
+                            self.assembly,
+                            available_genomes
+                        )
+                    ))
 
         # Download genome informations if list is not already loaded
         if self._genome_informations is None:
@@ -143,7 +153,9 @@ class Genome:
 
         # Filtering chromosomes
         self._chromosomes = typed.Dict.empty(
-            types.string, types.string)
+            types.unicode_type,
+            types.unicode_type
+        )
         for chrom in self._chromosomes_lenghts:
             if all(target not in chrom.lower() for target in filters) and chromosomes is None or chromosomes is not None and chrom in chromosomes:
                 self._chromosomes[str(chrom)] = ""
@@ -162,14 +174,14 @@ class Genome:
         self.NUCLEOTIDES_MAPPING = typed.Dict.empty(types.string, types.string)
 
         for src, dst in {
-            "a": "g",
-            "A": "G",
-            "g": "a",
-            "G": "A",
-            "t": "c",
-            "T": "C",
-            "c": "t",
-            "C": "T",
+            "a": "t",
+            "A": "T",
+            "g": "c",
+            "G": "C",
+            "t": "a",
+            "T": "A",
+            "c": "g",
+            "C": "G",
             "N": "n",
             "n": "N",
         }.items():
@@ -194,8 +206,7 @@ class Genome:
             locally.
         """
         try:
-            with open(self._genome_informations_path(), "r") as f:
-                return json.load(f)
+            compress_json.load(self._genome_informations_path())
         except Exception:
             warnings.warn(
                 "Failed to load genome {genome} informations. "
@@ -208,9 +219,10 @@ class Genome:
 
     def _store_genome_informations(self):
         """Store genome informations into default cache directory."""
-        os.makedirs(self._cache_directory, exist_ok=True)
-        with open(self._genome_informations_path(), "w") as f:
-            json.dump(self._genome_informations, f, indent=4)
+        compress_json.dump(
+            self._genome_informations,
+            self._genome_informations_path()
+        )
 
     def _chromosomes_path(self) -> str:
         """Return path to default chromosomes informations."""
@@ -228,8 +240,7 @@ class Genome:
             locally.
         """
         try:
-            with open(self._chromosomes_path(), "r") as f:
-                return json.load(f)
+            return compress_json.load(self._chromosomes_path())
         except Exception:
             warnings.warn(
                 "Failed to load chromosomes for genome {genome}. "
@@ -242,9 +253,10 @@ class Genome:
 
     def _store_chromosomes(self):
         """Store chromosomes informations into default cache directory."""
-        os.makedirs(self._cache_directory, exist_ok=True)
-        with open(self._chromosomes_path(), "w") as f:
-            json.dump(self._chromosomes_lenghts, f, indent=4)
+        compress_json.dump(
+            self._chromosomes_lenghts,
+            self._chromosomes_path()
+        )
 
     def _chromosome_path(self, chromosome: str) -> str:
         """Return path to the given chromosome.
@@ -254,7 +266,7 @@ class Genome:
         chromosome: str,
             The chromosome identifier, such as chr1, chrX, chrM...
         """
-        return "{cache_directory}/chromosomes/{chromosome}.json".format(
+        return "{cache_directory}/chromosomes/{chromosome}.json.gz".format(
             cache_directory=self._cache_directory,
             chromosome=chromosome
         )
@@ -273,8 +285,7 @@ class Genome:
         """
         path = self._chromosome_path(chromosome)
         try:
-            with open(path, "r") as f:
-                return json.load(f)["dna"]
+            return compress_json.load(path)["dna"]
         except json.decoder.JSONDecodeError:
             os.remove(path)
             raise Exception(

@@ -1,7 +1,8 @@
+"""Submodule providing utilities to query the UCSC servers."""
+from functools import lru_cache
 from typing import Dict
 from requests import get
-import os
-import json
+import compress_json
 
 
 def get_endpoint(endpoint: str) -> str:
@@ -16,6 +17,7 @@ def ucsc_list(endpoint: str):
     return ucsc("list/{endpoint}".format(endpoint=endpoint))
 
 
+@lru_cache()
 def get_available_genomes():
     return ucsc_list("ucscGenomes")["ucscGenomes"]
 
@@ -61,10 +63,10 @@ def download_chromosome(assembly: str, chromosome: str, start: int, end: int, pa
     -------
     The nucleotide sequence for the given chromosomes.
     """
-    chromosome_data = get_chromosome(assembly, chromosome, start, end)
-    os.makedirs(os.path.dirname(path), exist_ok=True)
-    with open(path, "w") as f:
-        json.dump(chromosome_data, f)
+    compress_json.dump(
+        get_chromosome(assembly, chromosome, start, end),
+        path
+    )
 
 
 def download_chromosome_wrapper(task: Dict):

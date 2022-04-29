@@ -1,3 +1,4 @@
+"""Submodule providing tools to expand a given bed file regions to a given amount."""
 import pandas as pd
 import numpy as np
 

@@ -62,6 +62,8 @@ setup(
         "tqdm",
         "dateparser",
         "pandas",
+        "userinput",
+        "compress_json",
         "numba>=0.50.0"
     ],
     extras_require=extras,

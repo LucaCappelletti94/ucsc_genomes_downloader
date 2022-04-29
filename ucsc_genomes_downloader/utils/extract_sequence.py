@@ -1,3 +1,4 @@
+"""Submodule providing tools to extract and process a genomic sequence."""
 from numba import njit, types, typed, prange
 from typing import Dict, List
 import numpy as np

@@ -1,9 +1,8 @@
-ucsc_genomes_downloader
+UCSC Genomes Downloader
 =========================================================================================
-|travis| |sonar_quality| |sonar_maintainability| |codacy|
-|code_climate_maintainability| |python_version| |pip| |downloads|
+|python_version| |pip| |downloads|
 
-Python package to quickly download and work with genomes from the UCSC.
+Python package to quickly download and process genomes from the UCSC website.
 
 How do I install this package?
 ----------------------------------------------
@@ -15,7 +14,7 @@ As usual, just download it using pip:
     
 Getting COVID-19 Genome
 ----------------------------------------------
-To download the covid-19 genome just run:
+To download the COVID19 genome just run:
 
 .. code:: python
 
@@ -24,13 +23,6 @@ To download the covid-19 genome just run:
     
     genome = covid["NC_045512v2"]
 
-
-Tests Coverage
-----------------------------------------------
-Since some software handling coverages sometimes get
-slightly different results, here's three of them:
-
-|coveralls| |sonar_coverage| |code_climate_coverage|
 
 Usage examples
 --------------
@@ -203,26 +195,6 @@ initial regions.
 
 .. _hg19: https://www.ncbi.nlm.nih.gov/assembly/GCF_000001405.13/
 
-.. |travis| image:: https://travis-ci.org/LucaCappelletti94/ucsc_genomes_downloader.png
-   :target: https://travis-ci.org/LucaCappelletti94/ucsc_genomes_downloader
-   :alt: Travis CI build
-
-.. |sonar_quality| image:: https://sonarcloud.io/api/project_badges/measure?project=LucaCappelletti94_ucsc_genomes_downloader&metric=alert_status
-    :target: https://sonarcloud.io/dashboard/index/LucaCappelletti94_ucsc_genomes_downloader
-    :alt: SonarCloud Quality
-
-.. |sonar_maintainability| image:: https://sonarcloud.io/api/project_badges/measure?project=LucaCappelletti94_ucsc_genomes_downloader&metric=sqale_rating
-    :target: https://sonarcloud.io/dashboard/index/LucaCappelletti94_ucsc_genomes_downloader
-    :alt: SonarCloud Maintainability
-
-.. |sonar_coverage| image:: https://sonarcloud.io/api/project_badges/measure?project=LucaCappelletti94_ucsc_genomes_downloader&metric=coverage
-    :target: https://sonarcloud.io/dashboard/index/LucaCappelletti94_ucsc_genomes_downloader
-    :alt: SonarCloud Coverage
-
-.. |coveralls| image:: https://coveralls.io/repos/github/LucaCappelletti94/ucsc_genomes_downloader/badge.svg?branch=master
-    :target: https://coveralls.io/github/LucaCappelletti94/ucsc_genomes_downloader?branch=master
-    :alt: Coveralls Coverage
-
 .. |pip| image:: https://badge.fury.io/py/ucsc-genomes-downloader.svg
     :target: https://badge.fury.io/py/ucsc-genomes-downloader
     :alt: Pypi project
@@ -230,18 +202,6 @@ initial regions.
 .. |downloads| image:: https://pepy.tech/badge/ucsc-genomes-downloader
     :target: https://pepy.tech/badge/ucsc-genomes-downloader
     :alt: Pypi total project downloads
-
-.. |codacy| image:: https://api.codacy.com/project/badge/Grade/79564bf70059458b8a9ee6e775f4c7d2
-    :target: https://www.codacy.com/app/LucaCappelletti94/ucsc_genomes_downloader?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=LucaCappelletti94/ucsc_genomes_downloader&amp;utm_campaign=Badge_Grade
-    :alt: Codacy Maintainability
-
-.. |code_climate_maintainability| image:: https://api.codeclimate.com/v1/badges/9cd5ed4d4e41892ccc9d/maintainability
-    :target: https://codeclimate.com/github/LucaCappelletti94/ucsc_genomes_downloader/maintainability
-    :alt: Maintainability
-
-.. |code_climate_coverage| image:: https://api.codeclimate.com/v1/badges/9cd5ed4d4e41892ccc9d/test_coverage
-    :target: https://codeclimate.com/github/LucaCappelletti94/ucsc_genomes_downloader/test_coverage
-    :alt: Code Climate Coverate
 
 .. |python_version| image:: https://img.shields.io/badge/python-3.x-blue
     :alt: Supported Python Versions
