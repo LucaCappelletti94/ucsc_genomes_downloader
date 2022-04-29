@@ -2,6 +2,8 @@ requests
 tqdm
 dateparser
 pandas
+userinput
+compress_json
 numba>=0.50.0
 
 [test]
